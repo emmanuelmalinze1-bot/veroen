@@ -108,9 +108,7 @@ const DashboardPage = () => {
         <p className="text-xs font-bold uppercase tracking-wider text-[#64748B]">
           Welcome back
         </p>
-        <h1 className="mt-1 text-2xl font-black text-[#0A1A3C]">
-          {firstName}
-        </h1>
+        <h1 className="mt-1 text-2xl font-black text-[#0A1A3C]">{firstName}</h1>
       </div>
 
       {/* Plan card */}
@@ -150,7 +148,7 @@ const DashboardPage = () => {
         </div>
         {!profile?.activated && (
           <Link
-            to={routes.activate()}
+            to={routes.deposit()}
             className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-[#2F80ED] py-3 text-sm font-black text-white transition hover:bg-[#1D6FE0]"
           >
             <BadgeCheck className="h-4 w-4" /> Activate your account
@@ -209,7 +207,7 @@ const DashboardPage = () => {
                   to: routes.withdraw() + '?tab=history',
                   icon: History,
                 }
-              : { label: 'Activate', to: routes.activate(), icon: Sparkles },
+              : { label: 'Activate', to: routes.deposit(), icon: Sparkles },
           ].map((link) => (
             <Link
               key={link.label}

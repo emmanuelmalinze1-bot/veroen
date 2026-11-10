@@ -259,12 +259,31 @@ const WithdrawalPage = () => {
     return () => unsub()
   }, [user])
 
+  const totalEarned = submissions.reduce(
+    (sum, item) => sum + (item.payout || 0),
+    0
+  )
+  const totalWithdrawn = withdrawals
+    .filter((item) => item.status === 'paid')
+    .reduce((sum, item) => sum + (item.amount || 0), 0)
+  const totalPending = withdrawals
+    .filter((item) => item.status === 'pending')
+    .reduce((sum, item) => sum + (item.amount || 0), 0)
+  const availableBalance = Math.max(
+    0,
+    totalEarned - totalWithdrawn - totalPending
+  )
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user) return
     const parsed = Number(amount)
     if (!parsed || parsed <= 0) {
       setError('Enter a valid amount.')
+      return
+    }
+    if (parsed > availableBalance) {
+      setError('Amount exceeds your available balance.')
       return
     }
     setSaving(true)
@@ -320,14 +339,6 @@ const WithdrawalPage = () => {
     }
   }
 
-  const totalEarned = submissions.reduce(
-    (sum, item) => sum + (item.payout || 0),
-    0
-  )
-  const totalWithdrawn = withdrawals
-    .filter((item) => item.status === 'paid')
-    .reduce((sum, item) => sum + (item.amount || 0), 0)
-
   return (
     <div className="min-h-screen bg-[#F4F7FE] px-3 pb-20 pt-3">
       <Metadata title="Withdraw — VIREON" />
@@ -377,7 +388,7 @@ const WithdrawalPage = () => {
               Withdrawal requests are available on an activated plan.
             </p>
             <Link
-              to={routes.activate()}
+              to={routes.deposit()}
               className="mt-5 inline-flex items-center gap-1.5 rounded-full bg-[#2F80ED] px-5 py-2.5 text-xs font-black text-white"
             >
               Activate account <ArrowRight className="h-3.5 w-3.5" />
@@ -447,7 +458,7 @@ const WithdrawalPage = () => {
               {profile && (
                 <p className="mt-1 text-[11px] text-[#94A3B8]">
                   Available balance:{' '}
-                  {money(profile.balance || profile.availableBalance || 0)}
+                  {money(availableBalance)}
                 </p>
               )}
             </div>

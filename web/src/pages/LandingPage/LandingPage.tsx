@@ -473,16 +473,16 @@ const LandingPage = () => {
               Plans
             </p>
             <h2 className="mt-3 text-3xl font-black tracking-tight text-[#0A1A3C] md:text-4xl">
-              Start free, activate when ready
+              Choose your activation plan
             </h2>
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
             <div className="rounded-3xl border border-[#E2E8F5] bg-[#F4F7FE] p-8">
               <h3 className="text-lg font-black text-[#0A1A3C]">Starter</h3>
               <p className="mt-1 text-sm text-[#64748B]">
-                Explore the dashboard and set up your profile.
+                Activate with a ₦12,000 deposit and unlock your dashboard.
               </p>
-              <p className="mt-5 text-4xl font-black text-[#0A1A3C]">Free</p>
+              <p className="mt-5 text-4xl font-black text-[#0A1A3C]">₦12,000</p>
               <ul className="mt-6 space-y-3 text-sm text-[#334155]">
                 {[
                   'Google account sign-in',
@@ -501,14 +501,9 @@ const LandingPage = () => {
               </span>
               <h3 className="text-lg font-black">Activated</h3>
               <p className="mt-1 text-sm text-white/60">
-                Unlock task modules and withdrawal requests.
+                Activate with a ₦20,000 deposit for full access.
               </p>
-              <p className="mt-5 text-4xl font-black">
-                ₦2,500
-                <span className="text-base font-medium text-white/60">
-                  /month
-                </span>
-              </p>
+              <p className="mt-5 text-4xl font-black">₦20,000</p>
               <ul className="mt-6 space-y-3 text-sm text-white/85">
                 {[
                   'All earning modules',
@@ -574,7 +569,7 @@ const LandingPage = () => {
             ) : (
               <CreditCard className="h-5 w-5" />
             )}
-            Get Started Free
+            Get started
           </button>
         </div>
       </section>

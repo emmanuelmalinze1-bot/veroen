@@ -1,7 +1,22 @@
 import { useEffect, useState } from 'react'
 
-import { collection, onSnapshot } from 'firebase/firestore'
-import { ArrowLeft, Eye, Mail, MoreVertical, Phone, Search } from 'lucide-react'
+import {
+  collection,
+  doc,
+  onSnapshot,
+  serverTimestamp,
+  updateDoc,
+} from 'firebase/firestore'
+import {
+  ArrowLeft,
+  BadgeCheck,
+  Eye,
+  Loader2,
+  Mail,
+  MoreVertical,
+  Phone,
+  Search,
+} from 'lucide-react'
 
 import { navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
@@ -18,6 +33,7 @@ const AdminUsersPage = () => {
   const [users, setUsers] = useState<any[]>([])
   const [search, setSearch] = useState('')
   const [openMenuId, setOpenMenuId] = useState<string | null>(null)
+  const [updatingId, setUpdatingId] = useState<string | null>(null)
 
   useEffect(() => {
     const unsub = onSnapshot(collection(db, 'users'), (snap) => {
@@ -39,6 +55,27 @@ const AdminUsersPage = () => {
       (u.phone || '').toLowerCase().includes(q)
     )
   })
+
+  const toggleActivation = async (u: any) => {
+    setUpdatingId(u.id)
+    try {
+      await updateDoc(
+        doc(db, 'users', u.id),
+        u.activated
+          ? { activated: false, rewardPending: false }
+          : {
+              activated: true,
+              activatedAt: serverTimestamp(),
+              ...(u.rewardClaimed ? {} : { rewardPending: true }),
+            }
+      )
+      setOpenMenuId(null)
+    } catch (err) {
+      console.error('Activation update failed:', err)
+    } finally {
+      setUpdatingId(null)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#F4F7FE] font-sans">
@@ -134,7 +171,21 @@ const AdminUsersPage = () => {
                       <MoreVertical className="h-5 w-5 text-[#94A3B8]" />
                     </button>
                     {openMenuId === u.id && (
-                      <div className="absolute right-0 top-8 z-10 w-40 rounded-lg border border-[#E2E8F5] bg-white p-1 shadow-lg">
+                      <div className="absolute right-0 top-8 z-10 w-44 rounded-lg border border-[#E2E8F5] bg-white p-1 shadow-lg">
+                        <button
+                          onClick={() => toggleActivation(u)}
+                          disabled={updatingId === u.id}
+                          className={`flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm font-bold hover:bg-[#E8F1FF] disabled:opacity-60 ${
+                            u.activated ? 'text-red-600' : 'text-emerald-700'
+                          }`}
+                        >
+                          {updatingId === u.id ? (
+                            <Loader2 className="h-4 w-4 animate-spin" />
+                          ) : (
+                            <BadgeCheck className="h-4 w-4" />
+                          )}
+                          {u.activated ? 'Deactivate' : 'Activate'}
+                        </button>
                         <button
                           onClick={() => {
                             setOpenMenuId(null)

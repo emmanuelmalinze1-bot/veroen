@@ -9,7 +9,6 @@ import {
   setDoc,
 } from 'firebase/firestore'
 import {
-  BadgeCheck,
   Banknote,
   Check,
   ChevronRight,
@@ -229,12 +228,11 @@ const UserProfilePage = () => {
             </button>
 
             <button
-              onClick={() => navigate(routes.activate())}
+              onClick={() => navigate(routes.deposit())}
               className="flex w-full items-center justify-between px-4 py-4 text-left transition hover:bg-[#F4F7FE]"
             >
               <span className="flex items-center gap-3 text-base font-semibold text-[#0A1A3C]">
-                <BadgeCheck className="h-5 w-5 text-[#64748B]" /> Plan &
-                activation
+                <Banknote className="h-5 w-5 text-[#64748B]" /> Deposit
               </span>
               <ChevronRight className="h-5 w-5 text-[#64748B]" />
             </button>

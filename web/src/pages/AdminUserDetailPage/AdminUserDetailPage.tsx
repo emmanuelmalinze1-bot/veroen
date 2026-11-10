@@ -1,12 +1,21 @@
 import { useEffect, useState } from 'react'
 
-import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
+import {
+  collection,
+  doc,
+  onSnapshot,
+  query,
+  serverTimestamp,
+  updateDoc,
+  where,
+} from 'firebase/firestore'
 import {
   ArrowLeft,
   Banknote,
   BadgeCheck,
   CheckCircle2,
   Clock,
+  Loader2,
   Mail,
   MapPin,
   Phone,
@@ -30,6 +39,7 @@ const AdminUserDetailPage = ({ id }: { id: string }) => {
   const [profile, setProfile] = useState<any>(null)
   const [withdrawals, setWithdrawals] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [updating, setUpdating] = useState(false)
 
   useEffect(() => {
     if (!id) return
@@ -60,19 +70,58 @@ const AdminUserDetailPage = ({ id }: { id: string }) => {
     .filter((w) => w.status === 'pending')
     .reduce((s, w) => s + (w.amount || 0), 0)
 
+  const handleToggleActivation = async () => {
+    if (!id || !profile) return
+    setUpdating(true)
+    try {
+      await updateDoc(
+        doc(db, 'users', id),
+        profile.activated
+          ? { activated: false, rewardPending: false }
+          : {
+              activated: true,
+              activatedAt: serverTimestamp(),
+              ...(profile.rewardClaimed ? {} : { rewardPending: true }),
+            }
+      )
+    } catch (err) {
+      console.error('Activation update failed:', err)
+    } finally {
+      setUpdating(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#F4F7FE] font-sans">
       <Metadata title="User Details — VIREON" />
 
       <header className="bg-[#0A1A3C] text-white">
-        <div className="mx-auto flex max-w-7xl items-center gap-4 px-6 py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-6 py-4">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate(routes.adminUsers())}
+              className="flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-sm font-bold hover:bg-white/20"
+            >
+              <ArrowLeft className="h-4 w-4" /> Back
+            </button>
+            <h1 className="text-2xl font-black">User Details</h1>
+          </div>
           <button
-            onClick={() => navigate(routes.adminUsers())}
-            className="flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-sm font-bold hover:bg-white/20"
+            onClick={handleToggleActivation}
+            disabled={updating || !profile}
+            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-bold text-white transition disabled:opacity-50 ${
+              profile?.activated
+                ? 'bg-red-500 hover:bg-red-600'
+                : 'bg-emerald-500 hover:bg-emerald-600'
+            }`}
           >
-            <ArrowLeft className="h-4 w-4" /> Back
+            {updating ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <BadgeCheck className="h-4 w-4" />
+            )}
+            {profile?.activated ? 'Deactivate' : 'Activate user'}
           </button>
-          <h1 className="text-2xl font-black">User Details</h1>
         </div>
       </header>
 

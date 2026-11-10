@@ -16,6 +16,7 @@ import { Metadata } from '@redwoodjs/web'
 
 import VireonLogo from 'src/components/VireonLogo/VireonLogo'
 import { useAuth } from 'src/contexts/AuthContexts'
+import { ACTIVATION_PLANS } from 'src/lib/activation'
 import { db } from 'src/lib/firebase'
 
 const COUNTRIES = [
@@ -34,7 +35,7 @@ const RegisterPage = () => {
   const [name, setName] = useState('')
   const [phone, setPhone] = useState('')
   const [country, setCountry] = useState('Nigeria')
-  const [plan, setPlan] = useState('activated')
+  const [plan, setPlan] = useState('starter')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
 
@@ -60,6 +61,8 @@ const RegisterPage = () => {
     setSaving(true)
     setError('')
     try {
+      const selectedPlan =
+        ACTIVATION_PLANS.find((item) => item.id === plan) || ACTIVATION_PLANS[0]
       await setDoc(
         doc(db, 'users', user.uid),
         {
@@ -69,11 +72,13 @@ const RegisterPage = () => {
           phone: phone.trim(),
           country,
           plan,
+          activationAmount: selectedPlan.amount,
+          activationPlanLabel: selectedPlan.label,
           updatedAt: serverTimestamp(),
         },
         { merge: true }
       )
-      navigate(routes.home())
+      navigate(routes.deposit())
     } catch (err) {
       console.error('Failed to save profile:', err)
       setError('Could not save your details. Please try again.')
@@ -183,10 +188,7 @@ const RegisterPage = () => {
                   Plan
                 </span>
                 <div className="grid grid-cols-2 gap-2">
-                  {[
-                    { id: 'starter', label: 'Starter', note: 'Free' },
-                    { id: 'activated', label: 'Activated', note: '₦2,500' },
-                  ].map((option) => (
+                  {ACTIVATION_PLANS.map((option) => (
                     <button
                       key={option.id}
                       type="button"
@@ -198,15 +200,15 @@ const RegisterPage = () => {
                       }`}
                     >
                       <p className="text-sm font-black text-[#0A1A3C]">
-                        {option.label}
+                        ₦{option.amount.toLocaleString()}
                       </p>
-                      <p className="text-xs text-[#64748B]">{option.note}</p>
+                      <p className="text-xs text-[#64748B]">{option.label}</p>
                     </button>
                   ))}
                 </div>
                 <p className="mt-2 text-[11px] text-[#94A3B8]">
-                  Selecting a paid plan does not charge you. Activation happens
-                  on the next screen.
+                  Your selected plan is shown again on the deposit screen. You
+                  will only be charged when you make the deposit.
                 </p>
               </div>
 
@@ -224,7 +226,7 @@ const RegisterPage = () => {
                 ) : (
                   <ArrowRight className="h-4 w-4" />
                 )}
-                Continue to dashboard
+                Continue to deposit
               </button>
             </form>
           )}

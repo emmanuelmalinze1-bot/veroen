@@ -2,7 +2,6 @@ import { Router, Route, Set } from '@redwoodjs/router'
 
 import { useAuth } from 'src/contexts/AuthContexts'
 import MainLayout from 'src/layouts/MainLayout/MainLayout'
-import ActivationPage from 'src/pages/ActivationPage/ActivationPage'
 import AdminHelpPage from 'src/pages/AdminHelpPage/AdminHelpPage'
 import AdminLoginPage from 'src/pages/AdminLoginPage/AdminLoginPage'
 import AdminNotificationsPage from 'src/pages/AdminNotificationsPage/AdminNotificationsPage'
@@ -13,6 +12,7 @@ import AdminUserDetailPage from 'src/pages/AdminUserDetailPage/AdminUserDetailPa
 import AdminUsersPage from 'src/pages/AdminUsersPage/AdminUsersPage'
 import AdminWithdrawalsPage from 'src/pages/AdminWithdrawalsPage/AdminWithdrawalsPage'
 import DashboardPage from 'src/pages/DashboardPage/DashboardPage'
+import DepositPage from 'src/pages/DepositPage/DepositPage'
 import LandingPage from 'src/pages/LandingPage/LandingPage'
 import NotFoundPage from 'src/pages/NotFoundPage/NotFoundPage'
 import RegisterPage from 'src/pages/RegisterPage/RegisterPage'
@@ -34,7 +34,7 @@ const Routes = () => {
           <Route path="/" page={DashboardPage} name="home" />
           <Route path="/tasks" page={TaskModulesPage} name="tasks" />
           <Route path="/withdraw" page={WithdrawalPage} name="withdraw" />
-          <Route path="/activate" page={ActivationPage} name="activate" />
+          <Route path="/deposit" page={DepositPage} name="deposit" />
           <Route path="/profile" page={UserProfilePage} name="profile" />
           <Route path="/notifications" page={UserNotificationsPage} name="notifications" />
           <Route path="/brand" page={VireonBrandPage} name="brand" />

@@ -91,7 +91,7 @@ const TaskModulesPage = () => {
 
   const handleComplete = async (task: any) => {
     if (!activated) {
-      navigate(routes.activate())
+      navigate(routes.deposit())
       return
     }
     if (!user?.uid || startingId) return
@@ -153,7 +153,7 @@ const TaskModulesPage = () => {
                 completing them and receiving payouts.
               </p>
               <Link
-                to={routes.activate()}
+                to={routes.deposit()}
                 className="mt-4 inline-flex items-center gap-2 rounded-full bg-[#2F80ED] px-5 py-2.5 text-sm font-black text-white"
               >
                 <BadgeCheck className="h-4 w-4" /> Activate account
@@ -232,7 +232,7 @@ const TaskModulesPage = () => {
                     </button>
                   ) : (
                     <Link
-                      to={routes.activate()}
+                      to={routes.deposit()}
                       className="flex w-full items-center justify-center gap-2 rounded-full border border-[#E2E8F5] bg-[#F4F7FE] py-2.5 text-sm font-black text-[#64748B]"
                     >
                       <Lock className="h-4 w-4" /> Activate to start

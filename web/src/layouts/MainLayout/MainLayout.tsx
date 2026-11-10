@@ -5,6 +5,7 @@ import { User, Home, ListChecks, Wallet, Bell } from 'lucide-react'
 
 import { Link, navigate, routes, useLocation } from '@redwoodjs/router'
 
+import ActivationRewardPopup from 'src/components/ActivationRewardPopup/ActivationRewardPopup'
 import VireonLogo from 'src/components/VireonLogo/VireonLogo'
 import { useAuth } from 'src/contexts/AuthContexts'
 import { db } from 'src/lib/firebase'
@@ -47,8 +48,8 @@ const MainLayout = ({ children }) => {
       ? 'Task Modules'
       : pathname === '/withdraw'
         ? 'Withdraw'
-        : pathname === '/activate'
-          ? 'Activate'
+        : pathname === '/deposit'
+          ? 'Deposit'
           : pathname === '/profile'
             ? 'Profile'
             : pathname === '/notifications'
@@ -122,6 +123,8 @@ const MainLayout = ({ children }) => {
           </div>
         </nav>
       </div>
+
+      <ActivationRewardPopup />
     </div>
   )
 }
