@@ -1,30 +1,28 @@
 import { Router, Route, Set } from '@redwoodjs/router'
-import { useAuth } from 'src/contexts/AuthContexts'
 
+import { useAuth } from 'src/contexts/AuthContexts'
 import MainLayout from 'src/layouts/MainLayout/MainLayout'
-import WelcomePage from 'src/pages/WelcomePage/WelcomePage'
-import HomePage from 'src/pages/HomePage/HomePage'
-import SearchPage from 'src/pages/SearchPage/SearchPage'
-import ProductDetailPage from 'src/pages/ProductDetailPage/ProductDetailPage'
-import BasketPage from 'src/pages/BasketPage/BasketPage'
-import CheckoutPage from 'src/pages/CheckoutPage/CheckoutPage'
-import OrdersPage from 'src/pages/OrdersPage/OrdersPage'
-import ProfilePage from 'src/pages/ProfilePage/ProfilePage'
-import NotificationsPage from 'src/pages/NotificationsPage/NotificationsPage'
-import BrandPage from 'src/pages/BrandPage/BrandPage'
+import ActivationPage from 'src/pages/ActivationPage/ActivationPage'
+import AdminHelpPage from 'src/pages/AdminHelpPage/AdminHelpPage'
+import AdminLoginPage from 'src/pages/AdminLoginPage/AdminLoginPage'
+import AdminNotificationsPage from 'src/pages/AdminNotificationsPage/AdminNotificationsPage'
+import AdminOverviewPage from 'src/pages/AdminOverviewPage/AdminOverviewPage'
+import AdminPortalPage from 'src/pages/AdminPortalPage/AdminPortalPage'
+import AdminTasksPage from 'src/pages/AdminTasksPage/AdminTasksPage'
+import AdminUserDetailPage from 'src/pages/AdminUserDetailPage/AdminUserDetailPage'
+import AdminUsersPage from 'src/pages/AdminUsersPage/AdminUsersPage'
+import AdminWithdrawalsPage from 'src/pages/AdminWithdrawalsPage/AdminWithdrawalsPage'
+import DashboardPage from 'src/pages/DashboardPage/DashboardPage'
+import LandingPage from 'src/pages/LandingPage/LandingPage'
 import NotFoundPage from 'src/pages/NotFoundPage/NotFoundPage'
+import RegisterPage from 'src/pages/RegisterPage/RegisterPage'
+import TaskModulesPage from 'src/pages/TaskModulesPage/TaskModulesPage'
+import UserNotificationsPage from 'src/pages/UserNotificationsPage/UserNotificationsPage'
+import UserProfilePage from 'src/pages/UserProfilePage/UserProfilePage'
+import VireonBrandPage from 'src/pages/VireonBrandPage/VireonBrandPage'
+import WithdrawalPage from 'src/pages/WithdrawalPage/WithdrawalPage'
 
 // ADMIN IMPORTS
-import AdminLoginPage from 'src/pages/AdminLoginPage/AdminLoginPage'
-import AdminPortalPage from 'src/pages/AdminPortalPage/AdminPortalPage'
-import AdminOverviewPage from 'src/pages/AdminOverviewPage/AdminOverviewPage'
-import AdminOrdersPage from 'src/pages/AdminOrdersPage/AdminOrdersPage'
-import AdminProductsPage from 'src/pages/AdminProductsPage/AdminProductsPage'
-import AdminLoggedInUsersPage from 'src/pages/AdminLoggedInUsersPage/AdminLoggedInUsersPage'
-import AdminProfilesPage from 'src/pages/AdminProfilesPage/AdminProfilesPage'
-import AdminUserDetailPage from 'src/pages/AdminUserDetailPage/AdminUserDetailPage'
-import AdminHelpPage from 'src/pages/AdminHelpPage/AdminHelpPage'
-import AdminNotificationsPage from 'src/pages/AdminNotificationsPage/AdminNotificationsPage'
 
 const Routes = () => {
   const { isAuthenticated } = useAuth()
@@ -33,28 +31,28 @@ const Routes = () => {
     <Router>
       {isAuthenticated ? (
         <Set wrap={MainLayout}>
-          <Route path="/" page={HomePage} name="home" />
-          <Route path="/search" page={SearchPage} name="search" />
-          <Route path="/product/{id}" page={ProductDetailPage} name="productDetail" />
-          <Route path="/basket" page={BasketPage} name="basket" />
-          <Route path="/checkout" page={CheckoutPage} name="checkout" />
-          <Route path="/orders" page={OrdersPage} name="orders" />
-          <Route path="/profile" page={ProfilePage} name="profile" />
-          <Route path="/notifications" page={NotificationsPage} name="notifications" />
-          <Route path="/brand" page={BrandPage} name="brand" />
+          <Route path="/" page={DashboardPage} name="home" />
+          <Route path="/tasks" page={TaskModulesPage} name="tasks" />
+          <Route path="/withdraw" page={WithdrawalPage} name="withdraw" />
+          <Route path="/activate" page={ActivationPage} name="activate" />
+          <Route path="/profile" page={UserProfilePage} name="profile" />
+          <Route path="/notifications" page={UserNotificationsPage} name="notifications" />
+          <Route path="/brand" page={VireonBrandPage} name="brand" />
         </Set>
       ) : (
-        <Route path="/" page={WelcomePage} name="welcome" />
+        <Route path="/" page={LandingPage} name="landing" />
       )}
+
+      {/* Registration completes the profile after Google sign-in */}
+      <Route path="/register" page={RegisterPage} name="register" />
 
       {/* ADMIN ROUTES */}
       <Route path="/admin-login" page={AdminLoginPage} name="adminLogin" />
       <Route path="/admin" page={AdminPortalPage} name="admin" />
       <Route path="/admin/overview" page={AdminOverviewPage} name="adminOverview" />
-      <Route path="/admin/orders" page={AdminOrdersPage} name="adminOrders" />
-      <Route path="/admin/products" page={AdminProductsPage} name="adminProducts" />
-      <Route path="/admin/users" page={AdminLoggedInUsersPage} name="adminLoggedInUsers" />
-      <Route path="/admin/profiles" page={AdminProfilesPage} name="adminProfiles" />
+      <Route path="/admin/withdrawals" page={AdminWithdrawalsPage} name="adminWithdrawals" />
+      <Route path="/admin/tasks" page={AdminTasksPage} name="adminTasks" />
+      <Route path="/admin/users" page={AdminUsersPage} name="adminUsers" />
       <Route path="/admin/user/{id}" page={AdminUserDetailPage} name="adminUserDetail" />
       <Route path="/admin/help" page={AdminHelpPage} name="adminHelp" />
       <Route path="/admin/notifications" page={AdminNotificationsPage} name="adminNotifications" />

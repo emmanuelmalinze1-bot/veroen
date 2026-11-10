@@ -1,45 +1,19 @@
-import React, { useState, useEffect, useRef } from 'react'
-import { ShoppingCart, User, LogOut, Home, Search, ShoppingBag, Bell } from 'lucide-react'
-import { Link, navigate, routes, useLocation } from '@redwoodjs/router'
-import { useCart } from 'src/components/CartContext/CartContext'
-import { useAuth } from 'src/contexts/AuthContexts'
-import YumzeeLogo from 'src/components/YumzeeLogo/YumzeeLogo'
-import { db } from 'src/lib/firebase'
+import React, { useState, useEffect } from 'react'
+
 import { collection, doc, onSnapshot } from 'firebase/firestore'
+import { User, Home, ListChecks, Wallet, Bell } from 'lucide-react'
+
+import { Link, navigate, routes, useLocation } from '@redwoodjs/router'
+
+import VireonLogo from 'src/components/VireonLogo/VireonLogo'
+import { useAuth } from 'src/contexts/AuthContexts'
+import { db } from 'src/lib/firebase'
 
 const MainLayout = ({ children }) => {
-  const { itemCount } = useCart()
-  const { user, logOut } = useAuth()
+  const { user } = useAuth()
 
-  const [showFloatingCart, setShowFloatingCart] = useState(false)
-  const [pos, setPos] = useState({ x: 16, y: 0 })
   const [totalNotifs, setTotalNotifs] = useState(0)
   const [readCount, setReadCount] = useState(0)
-  const dragging = useRef(false)
-  const offset = useRef({ x: 0, y: 0 })
-  const didDrag = useRef(false)
-
-  useEffect(() => {
-    const clampToViewport = (x: number, y: number) => ({
-      x: Math.min(Math.max(16, x), Math.max(16, window.innerWidth - 72)),
-      y: Math.min(Math.max(16, y), Math.max(16, window.innerHeight - 72)),
-    })
-
-    // Initial position — always inside the viewport
-    setPos(clampToViewport(16, window.innerHeight - 200))
-
-    const handleResize = () => {
-      setPos((prev) => clampToViewport(prev.x, prev.y))
-    }
-
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
-
-  useEffect(() => {
-    if (itemCount > 0) setShowFloatingCart(true)
-    else setShowFloatingCart(false)
-  }, [itemCount])
 
   // Count total notifications: broadcasts (no targetEmail) + this user's own
   useEffect(() => {
@@ -52,13 +26,13 @@ const MainLayout = ({ children }) => {
     return () => unsub()
   }, [user])
 
-  // Count how many user has read
+  // Count how many the user has read
   useEffect(() => {
     if (!user?.uid) {
       setReadCount(0)
       return
     }
-    const unsub = onSnapshot(doc(db, 'profiles', user.uid), (snap) => {
+    const unsub = onSnapshot(doc(db, 'users', user.uid), (snap) => {
       const readIds = snap.data()?.readNotifications || []
       setReadCount(readIds.length)
     })
@@ -67,125 +41,86 @@ const MainLayout = ({ children }) => {
 
   const unreadCount = Math.max(0, totalNotifs - readCount)
 
-  // WhatsApp-style header title: logo stays, only the text changes per page.
-  // Home (/) shows YUMZEE, every other page shows its own name.
   const { pathname } = useLocation()
   const headerTitle =
-    pathname === '/search'
-      ? 'Search'
-      : pathname === '/orders'
-        ? 'Orders'
-        : pathname === '/profile'
-          ? 'Profile'
-          : pathname === '/notifications'
-            ? 'Notifications'
-            : pathname === '/basket'
-              ? 'Basket'
-              : pathname === '/checkout'
-                ? 'Checkout'
+    pathname === '/tasks'
+      ? 'Task Modules'
+      : pathname === '/withdraw'
+        ? 'Withdraw'
+        : pathname === '/activate'
+          ? 'Activate'
+          : pathname === '/profile'
+            ? 'Profile'
+            : pathname === '/notifications'
+              ? 'Notifications'
               : pathname === '/brand'
                 ? 'Brand'
-                : pathname.startsWith('/product/')
-                  ? 'Product'
-                  : null
-
-  const onPointerDown = (e: React.PointerEvent) => {
-    dragging.current = true
-    didDrag.current = false
-    offset.current = { x: e.clientX - pos.x, y: e.clientY - pos.y }
-    ;(e.target as HTMLElement).setPointerCapture(e.pointerId)
-  }
-
-  const onPointerMove = (e: React.PointerEvent) => {
-    if (!dragging.current) return
-    didDrag.current = true
-    setPos({ x: e.clientX - offset.current.x, y: e.clientY - offset.current.y })
-  }
-
-  const onPointerUp = () => {
-    dragging.current = false
-    const margin = 16
-    const width = window.innerWidth
-    const height = window.innerHeight
-    // Always snap back INSIDE the viewport
-    const rawX = pos.x < width / 2 ? margin : width - margin - 56
-    const newX = Math.min(Math.max(margin, rawX), Math.max(margin, width - margin - 56))
-    const newY = Math.min(Math.max(margin, pos.y), Math.max(margin, height - margin - 56))
-    setPos({ x: newX, y: newY })
-  }
-
-  const handleSignOut = async () => {
-    await logOut()
-    navigate('/', { replace: true })
-  }
+                : null
 
   return (
-    <div className="mx-auto min-h-screen max-w-md bg-[#FFF9E5] font-sans text-[#211F26] antialiased">
-      <header className="sticky top-0 z-40 bg-[#3E2679] text-white">
+    <div className="mx-auto min-h-screen max-w-md bg-[#F4F7FE] font-sans text-[#0F172A] antialiased">
+      <header className="sticky top-0 z-40 bg-[#0A1A3C] text-white">
         <div className="flex items-center justify-between px-4 py-3">
           <Link to={routes.home()} className="flex items-center gap-1.5">
-            <YumzeeLogo size={38} />
+            <VireonLogo size={38} />
             <span className="text-2xl font-black tracking-tight">
               {headerTitle ? (
                 <span className="text-white">{headerTitle}</span>
               ) : (
                 <>
-                  <span className="text-[#FFC107]">YUM</span>
-                  <span className="text-white">ZEE</span>
+                  <span className="text-[#38BDF8]">VI</span>
+                  <span className="text-white">REON</span>
                 </>
               )}
             </span>
           </Link>
           <div className="flex items-center gap-2">
-            <Link to={routes.notifications()} className="relative rounded-full   p-2">
+            <Link
+              to={routes.notifications()}
+              className="relative rounded-full p-2"
+            >
               <Bell className="h-5 w-5 text-white" />
               {unreadCount > 0 && (
-                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#2F80ED] px-1 text-[10px] font-bold text-white">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
             </Link>
-            <Link to={routes.basket()} className="relative rounded-full bg-white/20 p-2">
-              <ShoppingCart className="h-5 w-5 text-white" />
-              {itemCount > 0 && <span className="absolute -right-1 -top-1 rounded-full bg-[#FFC107] px-1 text-[10px] text-black">{itemCount}</span>}
-            </Link>
           </div>
         </div>
       </header>
+
       <main className="pb-20">{children}</main>
 
-      <div className="fixed bottom-0 left-0 right-0 z-40 flex justify-center pointer-events-none">
-        <nav className="pointer-events-auto w-full max-w-md border-t bg-[#3E2679] text-white">
+      <div className="pointer-events-none fixed bottom-0 left-0 right-0 z-40 flex justify-center">
+        <nav className="pointer-events-auto w-full max-w-md border-t border-[#1B2C55] bg-[#0A1A3C] text-white">
           <div className="grid grid-cols-4 py-2">
-            <button onClick={() => navigate(routes.home())} className="flex flex-col items-center text-[10px]"><Home className="h-5 w-5" />Home</button>
-            <button onClick={() => navigate(routes.search())} className="flex flex-col items-center text-[10px]"><Search className="h-5 w-5" />Search</button>
-            <button onClick={() => navigate(routes.orders())} className="flex flex-col items-center text-[10px]"><ShoppingBag className="h-5 w-5" />Orders</button>
-            <button onClick={() => navigate(routes.profile())} className="flex flex-col items-center text-[10px]"><User className="h-5 w-5" />Profile</button>
+            <button
+              onClick={() => navigate(routes.home())}
+              className="flex flex-col items-center text-[10px]"
+            >
+              <Home className="h-5 w-5" /> Home
+            </button>
+            <button
+              onClick={() => navigate(routes.tasks())}
+              className="flex flex-col items-center text-[10px]"
+            >
+              <ListChecks className="h-5 w-5" /> Tasks
+            </button>
+            <button
+              onClick={() => navigate(routes.withdraw())}
+              className="flex flex-col items-center text-[10px]"
+            >
+              <Wallet className="h-5 w-5" /> Withdraw
+            </button>
+            <button
+              onClick={() => navigate(routes.profile())}
+              className="flex flex-col items-center text-[10px]"
+            >
+              <User className="h-5 w-5" /> Profile
+            </button>
           </div>
         </nav>
-      </div>
-
-      {/* Draggable Floating Cart — mobile only */}
-      <div
-        className={`fixed z-50 transition-all duration-500 ease-out md:hidden ${
-          showFloatingCart ? 'translate-x-0 opacity-100' : '-translate-x-24 opacity-0 pointer-events-none'
-        }`}
-        style={{ left: pos.x, top: pos.y, touchAction: 'none' }}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-      >
-        <button
-          onClick={() => { if (!didDrag.current) navigate(routes.basket()) }}
-          className="relative flex h-14 w-14 cursor-grab items-center justify-center rounded-full bg-[#FFC107] shadow-2xl active:cursor-grabbing"
-        >
-          <ShoppingCart className="h-6 w-6 text-[#3E2679]" />
-          {itemCount > 0 && (
-            <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#3E2679] text-[10px] font-bold text-white">
-              {itemCount}
-            </span>
-          )}
-        </button>
       </div>
     </div>
   )

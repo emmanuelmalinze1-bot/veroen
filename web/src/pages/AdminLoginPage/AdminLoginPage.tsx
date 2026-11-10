@@ -1,7 +1,13 @@
 import { useState } from 'react'
+
+import { Loader2, Lock, Mail, ShieldAlert } from 'lucide-react'
+
 import { navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
-import { Mail, Lock, ShieldAlert, Loader2 } from 'lucide-react'
+
+import VireonLogo from 'src/components/VireonLogo/VireonLogo'
+
+const ADMIN_EMAIL = 'maziemeka6@gmail.com'
 
 const AdminLoginPage = () => {
   const [email, setEmail] = useState('')
@@ -13,52 +19,49 @@ const AdminLoginPage = () => {
     setIsLoading(true)
     setError('')
 
-    // The secret email gate
-    if (email.trim().toLowerCase() === 'maziemeka6@gmail.com') {
-      // Success - Go to Admin Portal
+    if (email.trim().toLowerCase() === ADMIN_EMAIL) {
       navigate(routes.admin())
     } else {
-      setError('Access Denied. Only the Admin can enter.')
+      setError('Access denied. Only the admin can enter.')
       setIsLoading(false)
     }
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-red-50 p-4">
-      <Metadata title="Admin Login" />
+    <div className="flex min-h-screen items-center justify-center bg-[#F4F7FE] p-4 font-sans">
+      <Metadata title="Admin Login — VIREON" />
 
-      <div className="w-full max-w-md rounded-2xl border border-red-200 bg-white p-8 shadow-2xl">
-        {/* Logo Header */}
-        <div className="mb-6 text-center">
-          <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-red-600">
-            <ShieldAlert className="h-8 w-8 text-white" />
-          </div>
-          <h1 className="text-2xl font-black text-red-600">Admin Access</h1>
-          <p className="mt-2 text-sm text-gray-500">Restricted area. Authorized personnel only.</p>
+      <div className="w-full max-w-md rounded-2xl border border-[#E2E8F5] bg-white p-8 shadow-2xl shadow-[#0A1A3C]/10">
+        <div className="mb-6 flex flex-col items-center text-center">
+          <VireonLogo size={56} />
+          <h1 className="mt-4 text-2xl font-black text-[#0A1A3C]">
+            Admin access
+          </h1>
+          <p className="mt-2 text-sm text-[#64748B]">
+            Restricted area. Authorized personnel only.
+          </p>
         </div>
 
-        {/* Error Message */}
         {error && (
-          <div className="mb-4 rounded-xl border border-red-300 bg-red-100 p-3 text-center text-sm font-bold text-red-700">
-            {error}
+          <div className="mb-4 flex items-center gap-2 rounded-xl border border-red-200 bg-red-50 p-3 text-sm font-bold text-red-700">
+            <ShieldAlert className="h-4 w-4 shrink-0" /> {error}
           </div>
         )}
 
-        {/* Form */}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-red-600">
-              Admin Email
-            </label>
+            <span className="mb-1.5 block text-xs font-bold uppercase tracking-wider text-[#64748B]">
+              Admin email
+            </span>
             <div className="relative">
-              <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-red-400" />
+              <Mail className="absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[#94A3B8]" />
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter admin email"
                 required
-                className="w-full rounded-xl border border-red-200 bg-red-50 py-3 pl-10 pr-4 text-sm font-medium text-gray-800 placeholder-red-300 focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-200"
+                className="w-full rounded-xl border border-[#E2E8F5] bg-[#F4F7FE] py-3 pl-10 pr-4 text-sm font-medium text-[#0A1A3C] outline-none focus:border-[#2F80ED]"
               />
             </div>
           </div>
@@ -66,16 +69,23 @@ const AdminLoginPage = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-red-600 py-3 text-sm font-black text-white transition hover:bg-red-700 active:scale-95 disabled:opacity-50"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#0A1A3C] py-3 text-sm font-black text-white transition hover:bg-[#07132B] active:scale-95 disabled:opacity-50"
           >
-            {isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Lock className="h-4 w-4" />}
-            {isLoading ? 'Checking...' : 'Unlock Dashboard'}
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Lock className="h-4 w-4" />
+            )}
+            {isLoading ? 'Checking...' : 'Unlock dashboard'}
           </button>
         </form>
 
         <div className="mt-6 text-center">
-          <button onClick={() => navigate(routes.home())} className="text-xs font-bold text-gray-400 hover:text-red-600">
-            ← Back to Store
+          <button
+            onClick={() => navigate(routes.landing())}
+            className="text-xs font-bold text-[#94A3B8] hover:text-[#2F80ED]"
+          >
+            Back to store
           </button>
         </div>
       </div>

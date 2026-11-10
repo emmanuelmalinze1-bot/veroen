@@ -40,15 +40,15 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #8B0000;
+  background: #2F80ED;
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #a52a2a;
+  background: #1D6FE0;
 }
 
-/* ---- Yumzee Welcome animations ---- */
+/* ---- Vireon animations ---- */
 @keyframes yum-float {
   0%, 100% { transform: translateY(0) rotate(-6deg); }
   50% { transform: translateY(-18px) rotate(8deg); }
@@ -79,8 +79,8 @@ body {
   100% { transform: translateX(-50%); }
 }
 @keyframes yum-glow-pulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.55); }
-  50% { box-shadow: 0 0 0 14px rgba(255, 193, 7, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(47, 128, 237, 0.55); }
+  50% { box-shadow: 0 0 0 14px rgba(47, 128, 237, 0); }
 }
 @keyframes yum-bounce-soft {
   0%, 100% { transform: translateY(0); }
@@ -100,7 +100,7 @@ body {
 .anim-bounce-soft { animation: yum-bounce-soft 2s ease-in-out infinite; }
 .anim-marquee { animation: yum-marquee 22s linear infinite; }
 .anim-shimmer {
-  background: linear-gradient(90deg, #f0ece2 25%, #faf6ea 50%, #f0ece2 75%);
+  background: linear-gradient(90deg, #e8eefb 25%, #f4f7fe 50%, #e8eefb 75%);
   background-size: 800px 100%;
   animation: yum-shimmer 1.4s linear infinite;
 }

@@ -1,76 +1,102 @@
+import { useEffect, useState } from 'react'
+
+import { collection, onSnapshot } from 'firebase/firestore'
+import {
+  ArrowLeft,
+  Clock,
+  HelpCircle,
+  Mail,
+  MessageSquare,
+  Phone,
+} from 'lucide-react'
+
 import { navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
+
 import { db } from 'src/lib/firebase'
-import { collection, onSnapshot } from 'firebase/firestore'
-import { useEffect, useState } from 'react'
-import { ArrowLeft, Mail, HelpCircle, Clock, Phone, MessageSquare } from 'lucide-react'
+
+const formatDate = (ts: any) => {
+  if (!ts) return 'No date'
+  const date = ts.seconds ? new Date(ts.seconds * 1000) : new Date(ts)
+  return isNaN(date.getTime()) ? 'No date' : date.toLocaleString()
+}
 
 const AdminHelpPage = () => {
-  const [helpRequests, setHelpRequests] = useState<any[]>([])
+  const [requests, setRequests] = useState<any[]>([])
 
   useEffect(() => {
-    const unsubHelp = onSnapshot(collection(db, 'help'), (snapshot) => {
-      const data = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-      setHelpRequests(data.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)))
+    const unsub = onSnapshot(collection(db, 'help'), (snap) => {
+      const data = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as any[]
+      data.sort(
+        (a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+      )
+      setRequests(data)
     })
-    return () => unsubHelp()
+    return () => unsub()
   }, [])
 
-  const formatDate = (timestamp: any) => {
-    if (!timestamp) return 'No Date'
-    const date = timestamp.seconds ? new Date(timestamp.seconds * 1000) : new Date(timestamp)
-    return date.toLocaleString()
-  }
-
   return (
-    <div className="min-h-screen bg-red-50">
-      <Metadata title="Admin Help Requests" />
-      <header className="bg-red-600 text-white">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div className="flex items-center gap-4">
-            <button onClick={() => navigate(routes.admin())} className="flex items-center gap-2 rounded-lg bg-white/20 px-4 py-2 text-sm font-bold hover:bg-white/30">
-              <ArrowLeft className="h-4 w-4" /> Back
-            </button>
-            <h1 className="text-2xl font-black">Help Requests</h1>
-          </div>
+    <div className="min-h-screen bg-[#F4F7FE] font-sans">
+      <Metadata title="Admin Help — VIREON" />
+
+      <header className="bg-[#0A1A3C] text-white">
+        <div className="mx-auto flex max-w-7xl items-center gap-4 px-6 py-4">
+          <button
+            onClick={() => navigate(routes.admin())}
+            className="flex items-center gap-2 rounded-lg bg-white/10 px-4 py-2 text-sm font-bold hover:bg-white/20"
+          >
+            <ArrowLeft className="h-4 w-4" /> Back
+          </button>
+          <h1 className="text-2xl font-black">Help Requests</h1>
         </div>
       </header>
 
       <div className="mx-auto max-w-7xl px-6 py-6">
-        <div className="rounded-2xl bg-white p-6 border border-red-100">
-          {helpRequests.length === 0 ? (
-            <p className="py-8 text-center text-gray-400">No help requests yet...</p>
+        <div className="rounded-2xl border border-[#E2E8F5] bg-white p-6">
+          {requests.length === 0 ? (
+            <p className="py-8 text-center text-sm text-[#94A3B8]">
+              No help requests yet.
+            </p>
           ) : (
             <div className="space-y-4">
-              {helpRequests.map((req) => (
-                <div key={req.id} className="rounded-xl border border-red-200 p-4">
-                  <div className="flex flex-col md:flex-row justify-between border-b border-red-100 pb-3 mb-3 gap-2">
-                    <p className="flex items-center gap-2 text-base font-bold text-gray-800">
-                      <Mail className="h-5 w-5 text-red-600" /> {req.userEmail || 'Unknown Email'}
+              {requests.map((req) => (
+                <div
+                  key={req.id}
+                  className="rounded-xl border border-[#E2E8F5] p-4"
+                >
+                  <div className="mb-3 flex flex-col justify-between gap-2 border-b border-[#E2E8F5] pb-3 md:flex-row">
+                    <p className="flex items-center gap-2 text-base font-bold text-[#0A1A3C]">
+                      <Mail className="h-5 w-5 text-[#2F80ED]" />{' '}
+                      {req.userEmail || 'Unknown email'}
                     </p>
-                    <p className="flex items-center gap-2 text-xs text-gray-400">
+                    <p className="flex items-center gap-2 text-xs text-[#94A3B8]">
                       <Clock className="h-4 w-4" /> {formatDate(req.createdAt)}
                     </p>
                   </div>
-                  <div className="flex flex-col md:flex-row gap-4">
+                  <div className="flex flex-col gap-4 md:flex-row">
                     <div className="flex-1">
-                      <p className="mb-1 flex items-center gap-2 text-xs font-bold text-red-600">
-                        <HelpCircle className="h-4 w-4" /> Issue Type
+                      <p className="mb-1 flex items-center gap-2 text-xs font-bold uppercase text-[#2F80ED]">
+                        <HelpCircle className="h-4 w-4" /> Issue type
                       </p>
-                      <p className="text-sm text-gray-700">{req.issueType || 'No issue selected'}</p>
+                      <p className="text-sm text-[#334155]">
+                        {req.issueType || 'No issue selected'}
+                      </p>
                     </div>
                     <div className="flex-1">
-                      {/* Changed to Phone Number */}
-                      <p className="mb-1 flex items-center gap-2 text-xs font-bold text-red-600">
-                        <Phone className="h-4 w-4" /> Phone Number
+                      <p className="mb-1 flex items-center gap-2 text-xs font-bold uppercase text-[#2F80ED]">
+                        <Phone className="h-4 w-4" /> Phone number
                       </p>
-                      <p className="text-sm text-gray-700">{req.userPhone || 'No phone provided (Check Profile)'}</p>
+                      <p className="text-sm text-[#334155]">
+                        {req.userPhone || 'No phone provided'}
+                      </p>
                     </div>
                     <div className="flex-1">
-                      <p className="mb-1 flex items-center gap-2 text-xs font-bold text-red-600">
-                        <MessageSquare className="h-4 w-4" /> Other Details
+                      <p className="mb-1 flex items-center gap-2 text-xs font-bold uppercase text-[#2F80ED]">
+                        <MessageSquare className="h-4 w-4" /> Other details
                       </p>
-                      <p className="text-sm text-gray-700 break-words">{req.issueOther || 'No extra details'}</p>
+                      <p className="break-words text-sm text-[#334155]">
+                        {req.issueOther || 'No extra details'}
+                      </p>
                     </div>
                   </div>
                 </div>

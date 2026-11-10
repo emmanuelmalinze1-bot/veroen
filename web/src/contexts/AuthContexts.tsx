@@ -14,9 +14,9 @@ import {
   onAuthStateChanged,
   User,
 } from 'firebase/auth'
+import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore'
 
 import { auth, db } from 'src/lib/firebase'
-import { doc, setDoc, serverTimestamp } from 'firebase/firestore'
 
 export interface AuthContextType {
   googleSignIn: () => Promise<User | null>
@@ -55,14 +55,30 @@ export const AuthContextProvider = ({ children }: { children: ReactNode }) => {
       setUser(result.user)
       setLoading(false)
 
-      // NEW: Automatically save user to 'users' collection in Firestore
+      // Save the signed-in user to the 'users' collection. New accounts get
+      // VIREON defaults; returning users keep their existing plan/activation.
       if (result.user) {
-        await setDoc(doc(db, 'users', result.user.uid), {
-          name: result.user.displayName || 'User',
-          email: result.user.email || '',
-          uid: result.user.uid,
-          lastLogin: serverTimestamp(),
-        })
+        const userRef = doc(db, 'users', result.user.uid)
+        const existing = await getDoc(userRef)
+        await setDoc(
+          userRef,
+          {
+            name: result.user.displayName || 'User',
+            email: result.user.email || '',
+            uid: result.user.uid,
+            lastLogin: serverTimestamp(),
+            ...(existing.exists()
+              ? {}
+              : {
+                  plan: 'starter',
+                  activated: false,
+                  phone: '',
+                  country: '',
+                  createdAt: serverTimestamp(),
+                }),
+          },
+          { merge: true }
+        )
       }
 
       return result.user

@@ -6871,15 +6871,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:^19.2.3":
-  version: 19.2.5
-  resolution: "@types/react-dom@npm:19.2.5"
-  peerDependencies:
-    "@types/react": ^19.2.0
-  checksum: 10c0/7a59467b043debf392d109daa1ba672e791f20ce6f24ae81fb54715f890f8119d24967e61e3644b6307428603b695b7d59e69eaf531bd1963a74a6cb462f5f49
-  languageName: node
-  linkType: hard
-
 "@types/react@npm:^18.2.55":
   version: 18.3.31
   resolution: "@types/react@npm:18.3.31"
@@ -6887,15 +6878,6 @@ __metadata:
     "@types/prop-types": "npm:*"
     csstype: "npm:^3.2.2"
   checksum: 10c0/44180549dd045f536ececd39e39aacdf828e76adc1c4a90b132f453e23cc370c4648d9102ae401172ebd8fd8b1977a901a39e214e53ec77171b27514b588c179
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:^19.2.10":
-  version: 19.2.18
-  resolution: "@types/react@npm:19.2.18"
-  dependencies:
-    csstype: "npm:^3.2.2"
-  checksum: 10c0/d04216172b4b4362b310017c210dfbe019fb4f4e7dffd0313e70b3acb3051d5c3e76e7e84e3cf4c6a3c824993ffadfe3949e589a6398a09d4200e7670e2962de
   languageName: node
   linkType: hard
 
@@ -17046,22 +17028,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"root-workspace-0b6124@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "root-workspace-0b6124@workspace:."
-  dependencies:
-    "@redwoodjs/core": "npm:8.9.0"
-    "@redwoodjs/project-config": "npm:8.9.0"
-    "@types/react": "npm:^19.2.10"
-    "@types/react-dom": "npm:^19.2.3"
-    firebase: "npm:^12.8.0"
-    lucide-react: "npm:^1.33.0"
-    prettier-plugin-tailwindcss: "npm:^0.5.12"
-    react-google-button: "npm:^0.8.0"
-    typescript: "npm:^5.9.3"
-  languageName: unknown
-  linkType: soft
-
 "run-async@npm:^2.4.0":
   version: 2.4.1
   resolution: "run-async@npm:2.4.1"
@@ -18928,6 +18894,43 @@ __metadata:
   languageName: node
   linkType: hard
 
+"vireon-web@workspace:web":
+  version: 0.0.0-use.local
+  resolution: "vireon-web@workspace:web"
+  dependencies:
+    "@redwoodjs/forms": "npm:8.9.0"
+    "@redwoodjs/router": "npm:8.9.0"
+    "@redwoodjs/vite": "npm:8.9.0"
+    "@redwoodjs/web": "npm:8.9.0"
+    "@types/leaflet": "npm:^1.9.22"
+    "@types/react": "npm:^18.2.55"
+    "@types/react-dom": "npm:^18.2.19"
+    autoprefixer: "npm:^10.4.23"
+    firebase: "npm:^12.19.0"
+    leaflet: "npm:^1.9.4"
+    postcss: "npm:^8.5.6"
+    postcss-loader: "npm:^8.2.0"
+    react: "npm:18.3.1"
+    react-dom: "npm:18.3.1"
+    react-leaflet: "npm:^4"
+    tailwindcss: "npm:^3.4.17"
+  languageName: unknown
+  linkType: soft
+
+"vireon@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "vireon@workspace:."
+  dependencies:
+    "@redwoodjs/core": "npm:8.9.0"
+    "@redwoodjs/project-config": "npm:8.9.0"
+    firebase: "npm:^12.8.0"
+    lucide-react: "npm:^1.33.0"
+    prettier-plugin-tailwindcss: "npm:^0.5.12"
+    react-google-button: "npm:^0.8.0"
+    typescript: "npm:^5.9.3"
+  languageName: unknown
+  linkType: soft
+
 "vite-plugin-cjs-interop@npm:2.1.4":
   version: 2.1.4
   resolution: "vite-plugin-cjs-interop@npm:2.1.4"
@@ -19105,29 +19108,6 @@ __metadata:
   checksum: 10c0/383c9281d5b556bcd190fde3c823aeb005bb8cf82e62c75b47beb411014a4ed13fa5c5e0489ed0f1b8d501cd66b0bebcb8624c1a75750bd5df13e2a3b1b2d194
   languageName: node
   linkType: hard
-
-"web@workspace:web":
-  version: 0.0.0-use.local
-  resolution: "web@workspace:web"
-  dependencies:
-    "@redwoodjs/forms": "npm:8.9.0"
-    "@redwoodjs/router": "npm:8.9.0"
-    "@redwoodjs/vite": "npm:8.9.0"
-    "@redwoodjs/web": "npm:8.9.0"
-    "@types/leaflet": "npm:^1.9.22"
-    "@types/react": "npm:^18.2.55"
-    "@types/react-dom": "npm:^18.2.19"
-    autoprefixer: "npm:^10.4.23"
-    firebase: "npm:^12.19.0"
-    leaflet: "npm:^1.9.4"
-    postcss: "npm:^8.5.6"
-    postcss-loader: "npm:^8.2.0"
-    react: "npm:18.3.1"
-    react-dom: "npm:18.3.1"
-    react-leaflet: "npm:^4"
-    tailwindcss: "npm:^3.4.17"
-  languageName: unknown
-  linkType: soft
 
 "webcrypto-core@npm:^1.9.2":
   version: 1.9.2

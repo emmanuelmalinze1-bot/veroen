@@ -6,7 +6,7 @@
 # https://redwoodjs.com/docs/app-configuration-redwood-toml
 
 [web]
-  title = "Redwood App"
+  title = "VIREON"
   port = 40002
   apiUrl = "/api"
   includeEnvironmentVariables = [

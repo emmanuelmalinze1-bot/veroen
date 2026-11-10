@@ -1,111 +1,278 @@
-// web/src/pages/DashboardPage/DashboardPage.tsx - minimal, portable
-import { useState } from 'react'
-import { Package, ShoppingBag, Heart, MapPin, ArrowRight, Check, Plus, User, Coffee } from 'lucide-react'
+import { useEffect, useState } from 'react'
+
+import { collection, doc, onSnapshot, query, where } from 'firebase/firestore'
+import {
+  ArrowRight,
+  BadgeCheck,
+  CheckCircle2,
+  Clock,
+  CreditCard,
+  History,
+  ListChecks,
+  Sparkles,
+  TrendingUp,
+  User,
+  Wallet,
+} from 'lucide-react'
+
 import { Link, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
+
 import { useAuth } from 'src/contexts/AuthContexts'
-import { useCart } from 'src/contexts/CartContext'
+import { db } from 'src/lib/firebase'
 
-interface QuickSnack {
-  id: number
-  name: string
-  price: number
-  image: string
-  category: string
-}
-
-const quickSnacksData: QuickSnack[] = [
-  { id: 1, name: 'Ultimate Meat Pie', price: 700, image: 'https://images.unsplash.com/photo-1585238342024-78d387f4a707?w=400&h=300&fit=crop', category: 'Savory' },
-  { id: 6, name: 'Chicken Sandwich', price: 1200, image: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&h=300&fit=crop', category: 'Pastries' },
-  { id: 10, name: 'Pepperoni Pizza Slice', price: 1200, image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=300&fit=crop', category: 'Fast Food' },
-  { id: 2, name: 'Shrimply Fish Pie', price: 900, image: 'https://images.unsplash.com/photo-1627046505961-e46b9df158be?w=400&h=300&fit=crop', category: 'Savory' },
-]
+const money = (value: number) => `₦${(value || 0).toLocaleString('en-NG')}`
 
 const DashboardPage = () => {
   const { user } = useAuth()
-  const { addToCart } = useCart()
-  const [addedItemIds, setAddedItemIds] = useState<number[]>([])
+  const [profile, setProfile] = useState<any>(null)
+  const [withdrawals, setWithdrawals] = useState<any[]>([])
+  const [submissions, setSubmissions] = useState<any[]>([])
 
-  const getFirstName = () => {
-    if (!user) return 'there'
-    const name = user.displayName || user.email?.split('@')[0] || 'there'
-    return name.split(' ')[0]
-  }
-  const handleQuickAdd = (snack: QuickSnack) => {
-    addToCart({ id: snack.id, name: snack.name, price: snack.price, image: snack.image, category: snack.category })
-    setAddedItemIds((prev) => [...prev, snack.id])
-    setTimeout(() => setAddedItemIds((prev) => prev.filter((id) => id !== snack.id)), 1500)
-  }
+  useEffect(() => {
+    if (!user?.uid) return
+    const unsub = onSnapshot(doc(db, 'users', user.uid), (snap) => {
+      setProfile(snap.exists() ? { id: snap.id, ...snap.data() } : null)
+    })
+    return () => unsub()
+  }, [user])
+
+  useEffect(() => {
+    if (!user?.uid) return
+    const q = query(
+      collection(db, 'withdrawals'),
+      where('userId', '==', user.uid)
+    )
+    const unsub = onSnapshot(q, (snap) => {
+      const data = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as any[]
+      data.sort(
+        (a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+      )
+      setWithdrawals(data)
+    })
+    return () => unsub()
+  }, [user])
+
+  useEffect(() => {
+    if (!user?.uid) return
+    const q = query(
+      collection(db, 'submissions'),
+      where('userId', '==', user.uid)
+    )
+    const unsub = onSnapshot(q, (snap) => {
+      const data = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as any[]
+      data.sort(
+        (a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+      )
+      setSubmissions(data)
+    })
+    return () => unsub()
+  }, [user])
+
+  const displayName =
+    profile?.name || user?.displayName || user?.email?.split('@')[0] || 'there'
+  const firstName = displayName.split(' ')[0]
+
+  const totalEarned = submissions.reduce((sum, s) => sum + (s.payout || 0), 0)
+  const totalPaid = withdrawals
+    .filter((w) => w.status === 'paid')
+    .reduce((sum, w) => sum + (w.amount || 0), 0)
+  const totalPending = withdrawals
+    .filter((w) => w.status === 'pending')
+    .reduce((sum, w) => sum + (w.amount || 0), 0)
+  const balance = Math.max(0, totalEarned - totalPaid - totalPending)
+
+  const recent = [
+    ...submissions.slice(0, 3).map((s) => ({
+      id: `sub-${s.id}`,
+      title: s.taskName || 'Task completed',
+      meta: s.status || 'completed',
+      amount: s.payout || 0,
+      date: s.createdAt,
+    })),
+    ...withdrawals.slice(0, 3).map((w) => ({
+      id: `wd-${w.id}`,
+      title: 'Withdrawal request',
+      meta: w.status || 'pending',
+      amount: -(w.amount || 0),
+      date: w.createdAt,
+    })),
+  ].slice(0, 4)
 
   return (
-    <div className="min-h-screen bg-[#FBF9FE] py-6">
-      <Metadata title="Dashboard — YumZee" description="Your YumZee dashboard" />
-      <div className="container mx-auto max-w-6xl space-y-6 px-4">
-        {/* Welcome */}
-        <div className="rounded-3xl bg-[#4B2E83] p-6 text-white">
-          <h1 className="text-xl font-bold">Welcome back, <span className="text-[#FFC928]">{getFirstName()}</span></h1>
-          <p className="mt-1 text-sm text-white/80">Fresh snacks for everyone — quick ordering, fast delivery.</p>
-          <div className="mt-4 flex flex-wrap gap-3">
-            <Link to={routes.home()} className="inline-flex items-center gap-2 rounded-2xl bg-[#FFC928] px-6 py-3 text-sm font-bold text-[#4B2E83] hover:bg-[#E5B420] transition"><ShoppingBag className="h-4 w-4" /> Order Now</Link>
-            <Link to={routes.orders()} className="inline-flex items-center gap-2 rounded-2xl border border-white/20 bg-white/10 px-5 py-3 text-sm font-semibold text-white hover:bg-white/15 transition"><Package className="h-4 w-4" /> My Orders</Link>
+    <div className="min-h-screen bg-[#F4F7FE] px-4 pb-24 pt-4">
+      <Metadata title="Dashboard — VIREON" />
+
+      {/* Greeting */}
+      <div className="anim-fade-up">
+        <p className="text-xs font-bold uppercase tracking-wider text-[#64748B]">
+          Welcome back
+        </p>
+        <h1 className="mt-1 text-2xl font-black text-[#0A1A3C]">
+          {firstName}
+        </h1>
+      </div>
+
+      {/* Plan card */}
+      <div className="anim-fade-up mt-4 overflow-hidden rounded-2xl bg-gradient-to-br from-[#0A1A3C] to-[#12306B] p-5 text-white">
+        <div className="flex items-start justify-between">
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-white/60">
+              Current plan
+            </p>
+            <p className="mt-1 text-2xl font-black capitalize">
+              {profile?.plan || 'Starter'}
+            </p>
+          </div>
+          <span
+            className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase ${
+              profile?.activated
+                ? 'bg-[#38BDF8] text-[#07132B]'
+                : 'bg-white/15 text-white'
+            }`}
+          >
+            {profile?.activated ? 'Active' : 'Not active'}
+          </span>
+        </div>
+        <div className="mt-5 grid grid-cols-2 gap-3">
+          <div className="rounded-xl bg-white/10 p-3">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-white/60">
+              Available balance
+            </p>
+            <p className="mt-1 text-xl font-black">{money(balance)}</p>
+          </div>
+          <div className="rounded-xl bg-white/10 p-3">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-white/60">
+              Pending
+            </p>
+            <p className="mt-1 text-xl font-black">{money(totalPending)}</p>
           </div>
         </div>
+        {!profile?.activated && (
+          <Link
+            to={routes.activate()}
+            className="mt-4 flex items-center justify-center gap-2 rounded-xl bg-[#2F80ED] py-3 text-sm font-black text-white transition hover:bg-[#1D6FE0]"
+          >
+            <BadgeCheck className="h-4 w-4" /> Activate your account
+          </Link>
+        )}
+      </div>
 
-        {/* Current order - minimal */}
-        <div className="rounded-2xl border border-[#E9E5EE] bg-white p-4">
-          <div className="flex items-center justify-between border-b border-[#E9E5EE] pb-3">
-            <h2 className="text-sm font-black text-[#211F26]">Recent order</h2>
-            <Link to={routes.orders()} className="text-xs font-bold text-[#4B2E83]">View all →</Link>
+      {/* Stats */}
+      <div className="anim-fade-up mt-4 grid grid-cols-2 gap-3">
+        {[
+          {
+            label: 'Total earned',
+            value: money(totalEarned),
+            icon: TrendingUp,
+          },
+          { label: 'Withdrawn', value: money(totalPaid), icon: Wallet },
+          {
+            label: 'Tasks done',
+            value: String(submissions.length),
+            icon: CheckCircle2,
+          },
+          {
+            label: 'Requests',
+            value: String(withdrawals.length),
+            icon: CreditCard,
+          },
+        ].map((stat) => (
+          <div
+            key={stat.label}
+            className="rounded-2xl border border-[#E2E8F5] bg-white p-4"
+          >
+            <stat.icon className="h-5 w-5 text-[#2F80ED]" />
+            <p className="mt-2 text-lg font-black text-[#0A1A3C]">
+              {stat.value}
+            </p>
+            <p className="text-[11px] font-semibold uppercase tracking-wider text-[#64748B]">
+              {stat.label}
+            </p>
           </div>
-          <div className="mt-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-sm">
-            <div>
-              <p className="font-bold text-[#211F26]">Order #YZ-84920 — On the way</p>
-              <p className="text-xs text-[#6F6B76] flex items-center gap-1"><MapPin className="h-3 w-3" /> Delivery to your address • 10-15 min</p>
-            </div>
-            <div className="text-xs text-[#6F6B76] text-right"><p>2× Meat Pie, 1× Coke</p><p className="font-bold text-[#4B2E83]">₦1,800</p></div>
-          </div>
+        ))}
+      </div>
+
+      {/* Quick links */}
+      <div className="anim-fade-up mt-5">
+        <h2 className="mb-2 text-sm font-black uppercase tracking-wider text-[#64748B]">
+          Quick links
+        </h2>
+        <div className="grid grid-cols-2 gap-3">
+          {[
+            { label: 'Task modules', to: routes.tasks(), icon: ListChecks },
+            { label: 'Withdraw', to: routes.withdraw(), icon: Wallet },
+            { label: 'Profile', to: routes.profile(), icon: User },
+            profile?.activated
+              ? {
+                  label: 'History',
+                  to: routes.withdraw() + '?tab=history',
+                  icon: History,
+                }
+              : { label: 'Activate', to: routes.activate(), icon: Sparkles },
+          ].map((link) => (
+            <Link
+              key={link.label}
+              to={link.to}
+              className="flex items-center justify-between rounded-2xl border border-[#E2E8F5] bg-white p-4 transition hover:border-[#2F80ED] active:scale-[0.99]"
+            >
+              <span className="flex items-center gap-2 text-sm font-bold text-[#0A1A3C]">
+                <link.icon className="h-4 w-4 text-[#2F80ED]" /> {link.label}
+              </span>
+              <ArrowRight className="h-4 w-4 text-[#94A3B8]" />
+            </Link>
+          ))}
         </div>
+      </div>
 
-        {/* Quick add */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h2 className="text-sm font-black text-[#211F26]">Quick add</h2>
-            <Link to={routes.home()} className="flex items-center gap-1 text-xs font-bold text-[#4B2E83]">Full Menu <ArrowRight className="h-3.5 w-3.5" /></Link>
+      {/* Recent activity */}
+      <div className="anim-fade-up mt-5 rounded-2xl border border-[#E2E8F5] bg-white p-4">
+        <div className="mb-3 flex items-center justify-between">
+          <h2 className="text-sm font-black uppercase tracking-wider text-[#64748B]">
+            Recent activity
+          </h2>
+          <Link
+            to={routes.withdraw() + '?tab=history'}
+            className="text-xs font-bold text-[#2F80ED]"
+          >
+            View all
+          </Link>
+        </div>
+        {recent.length === 0 ? (
+          <div className="py-8 text-center">
+            <Clock className="mx-auto h-10 w-10 text-[#CBD5E1]" />
+            <p className="mt-2 text-sm text-[#64748B]">
+              No activity yet. Your task and withdrawal history will appear
+              here.
+            </p>
           </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {quickSnacksData.map((snack) => {
-              const isAdded = addedItemIds.includes(snack.id)
-              return (
-                <div key={snack.id} className="overflow-hidden rounded-2xl border border-[#E9E5EE] bg-white">
-                  <div className="h-36 bg-gray-100"><img src={snack.image} alt={snack.name} className="h-full w-full object-cover" /></div>
-                  <div className="p-4">
-                    <div className="text-[11px] font-bold uppercase tracking-wider text-[#6F6B76]">{snack.category}</div>
-                    <h3 className="text-sm font-bold text-[#211F26]">{snack.name}</h3>
-                    <div className="mt-3 flex items-center justify-between">
-                      <span className="text-sm font-black text-[#4B2E83]">₦{snack.price.toLocaleString()}</span>
-                      <button onClick={() => handleQuickAdd(snack)} className={`rounded-xl px-3 py-2 text-xs font-bold ${isAdded ? 'bg-emerald-600 text-white' : 'bg-[#FFC928] text-[#4B2E83] hover:bg-[#E5B420]'}`}>
-                        {isAdded ? <span className="flex items-center gap-1"><Check className="h-3 w-3" /> Added</span> : <span className="flex items-center gap-1"><Plus className="h-3 w-3" /> Add</span>}
-                      </button>
-                    </div>
-                  </div>
+        ) : (
+          <div className="space-y-2">
+            {recent.map((item) => (
+              <div
+                key={item.id}
+                className="flex items-center justify-between rounded-xl border border-[#E2E8F5] px-3 py-2.5"
+              >
+                <div>
+                  <p className="text-sm font-bold text-[#0A1A3C]">
+                    {item.title}
+                  </p>
+                  <p className="text-[11px] capitalize text-[#64748B]">
+                    {item.meta}
+                  </p>
                 </div>
-              )
-            })}
+                <span
+                  className={`text-sm font-black ${
+                    item.amount >= 0 ? 'text-[#2F80ED]' : 'text-red-500'
+                  }`}
+                >
+                  {item.amount >= 0 ? '+' : '-'}
+                  {money(Math.abs(item.amount))}
+                </span>
+              </div>
+            ))}
           </div>
-        </div>
-
-        {/* Shortcuts */}
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <Link to={routes.favorites()} className="rounded-2xl border border-[#E9E5EE] bg-white p-4 hover:border-[#4B2E83]/20 transition">
-            <Heart className="h-5 w-5 text-pink-600" /><h3 className="mt-2 text-sm font-bold text-[#211F26]">Favorites</h3><p className="text-xs text-[#6F6B76]">Your saved snacks.</p>
-          </Link>
-          <Link to={routes.profile()} className="rounded-2xl border border-[#E9E5EE] bg-white p-4 hover:border-[#4B2E83]/20 transition">
-            <User className="h-5 w-5 text-[#4B2E83]" /><h3 className="mt-2 text-sm font-bold text-[#211F26]">Delivery details</h3><p className="text-xs text-[#6F6B76]">Address and contact.</p>
-          </Link>
-          <Link to={routes.contact()} className="rounded-2xl border border-[#E9E5EE] bg-white p-4 hover:border-[#4B2E83]/20 transition">
-            <Coffee className="h-5 w-5 text-amber-600" /><h3 className="mt-2 text-sm font-bold text-[#211F26]">Support</h3><p className="text-xs text-[#6F6B76]">Need help? Contact us.</p>
-          </Link>
-        </div>
+        )}
       </div>
     </div>
   )

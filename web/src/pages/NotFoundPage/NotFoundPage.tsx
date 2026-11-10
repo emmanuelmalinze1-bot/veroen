@@ -1,66 +1,31 @@
-// web/src/pages/FatalErrorPage/FatalErrorPage.tsx
-import React from 'react'
+import { Compass } from 'lucide-react'
 
-const FatalErrorPage = () => {
+import { Link, routes } from '@redwoodjs/router'
+import { Metadata } from '@redwoodjs/web'
+
+import VireonLogo from 'src/components/VireonLogo/VireonLogo'
+
+const NotFoundPage = () => {
   return (
-    <main className="flex h-screen w-full items-center justify-center bg-[#3E2679] px-6 text-center">
-      <style
-        dangerouslySetInnerHTML={{
-          __html: `
-            html, body {
-              margin: 0;
-              padding: 0;
-              background-color: #3E2679;
-            }
-            html * {
-              box-sizing: border-box;
-            }
-            @keyframes spin {
-              to { transform: rotate(360deg); }
-            }
-            @keyframes pulse {
-              0%, 100% { opacity: 1; }
-              50% { opacity: 0.6; }
-            }
-          `,
-        }}
-      />
-
-      <div className="flex w-full max-w-sm flex-col items-center">
-        {/* Spinner */}
-        <div
-          className="mb-6 h-12 w-12 rounded-full border-4 border-white/20 border-t-[#FFC107]"
-          style={{ animation: 'spin 1s linear infinite' }}
-        />
-
-        {/* Brand */}
-        <h1 className="text-4xl font-black tracking-tight">
-          <span className="text-[#FFC107]">YUM</span>
-          <span className="text-white">ZEE</span>
-        </h1>
-
-        {/* Message */}
-        <p
-          className="mt-4 text-sm font-medium text-white/80"
-          style={{ animation: 'pulse 1.6s ease-in-out infinite' }}
-        >
-          Please wait a moment...
-        </p>
-
-        <p className="mt-1 text-xs text-white/40">
-          Something went wrong. Reloading shortly.
-        </p>
-
-        {/* Reload button */}
-        <button
-          onClick={() => window.location.reload()}
-          className="mt-6 rounded-full bg-[#FFC107] px-6 py-2.5 text-sm font-black text-[#3E2679] transition active:scale-95"
-        >
-          Reload Page
-        </button>
-      </div>
-    </main>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-[#0A1A3C] px-6 text-center font-sans">
+      <Metadata title="Page not found — VIREON" />
+      <VireonLogo size={72} />
+      <p className="mt-6 text-5xl font-black text-[#38BDF8]">404</p>
+      <h1 className="mt-2 text-2xl font-black text-white">
+        This page does not exist
+      </h1>
+      <p className="mt-2 max-w-sm text-sm text-white/60">
+        The link may be broken or the page may have moved. Head back to your
+        dashboard to continue.
+      </p>
+      <Link
+        to={routes.home()}
+        className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#2F80ED] px-6 py-3 text-sm font-black text-white transition hover:bg-[#1D6FE0]"
+      >
+        <Compass className="h-4 w-4" /> Back to dashboard
+      </Link>
+    </div>
   )
 }
 
-export default FatalErrorPage
+export default NotFoundPage
