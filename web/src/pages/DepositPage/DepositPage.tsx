@@ -27,9 +27,9 @@ import { getActivationAmount } from 'src/lib/activation'
 import { db } from 'src/lib/firebase'
 
 const DEPOSIT_ACCOUNT = {
-  bank: 'OPay',
-  accountName: 'Vision Concepts',
-  accountNumber: '9067451563',
+  bank: 'Paystack-Titan',
+  accountName: 'BAOBABMICROFI/EZE JONAH',
+  accountNumber: '9731984987',
 }
 
 const TELEGRAM_SUPPORT = 'https://t.me/thevalue4k'

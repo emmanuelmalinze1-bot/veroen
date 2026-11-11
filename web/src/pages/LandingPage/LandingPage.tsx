@@ -17,7 +17,6 @@ import {
   Star,
   TrendingUp,
   Users,
-  Wallet,
 } from 'lucide-react'
 
 import { navigate, routes } from '@redwoodjs/router'
@@ -85,6 +84,15 @@ const STEPS = [
   },
 ]
 
+const LIVE_FEED = [
+  'Amaka withdrew ₦15,000 • 2 min ago',
+  'New member joined from Lagos',
+  'Daniel completed a CallCash task • ₦500',
+  'Fatima activated the ₦20,000 plan',
+  'Tunde received a payout • 5 min ago',
+  'Survey module refreshed with new tasks',
+]
+
 const TESTIMONIALS = [
   {
     name: 'Amaka O.',
@@ -135,6 +143,9 @@ const FAQS = [
   },
 ]
 
+const NAV_LINK =
+  'relative after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:w-0 after:rounded-full after:bg-[#2F80ED] after:transition-all after:duration-300 hover:text-[#0A1A3C] hover:after:w-full'
+
 const LandingPage = () => {
   const { googleSignIn, loading } = useAuth()
   const [signingIn, setSigningIn] = useState(false)
@@ -175,7 +186,7 @@ const LandingPage = () => {
       />
 
       {/* NAV */}
-      <header className="sticky top-0 z-40 border-b border-[#E2E8F5] bg-white/85 backdrop-blur">
+      <header className="sticky top-0 z-40 border-b border-[#E2E8F5] bg-white/85 shadow-sm shadow-[#0A1A3C]/5 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2">
             <VireonLogo size={38} />
@@ -185,19 +196,19 @@ const LandingPage = () => {
             </span>
           </div>
           <nav className="hidden items-center gap-6 text-sm font-semibold text-[#475569] md:flex">
-            <a href="#modules" className="hover:text-[#0A1A3C]">
+            <a href="#modules" className={NAV_LINK}>
               Modules
             </a>
-            <a href="#how" className="hover:text-[#0A1A3C]">
+            <a href="#how" className={NAV_LINK}>
               How it works
             </a>
-            <a href="#testimonials" className="hover:text-[#0A1A3C]">
+            <a href="#testimonials" className={NAV_LINK}>
               Reviews
             </a>
-            <a href="#plans" className="hover:text-[#0A1A3C]">
+            <a href="#plans" className={NAV_LINK}>
               Plans
             </a>
-            <a href="#faq" className="hover:text-[#0A1A3C]">
+            <a href="#faq" className={NAV_LINK}>
               FAQ
             </a>
           </nav>
@@ -218,121 +229,124 @@ const LandingPage = () => {
 
       {/* HERO */}
       <section className="relative overflow-hidden">
-        <div className="pointer-events-none absolute -left-24 top-0 h-72 w-72 rounded-full bg-[#2F80ED]/20 blur-3xl" />
-        <div className="pointer-events-none absolute -right-24 top-24 h-80 w-80 rounded-full bg-[#38BDF8]/20 blur-3xl" />
-        <div className="relative mx-auto grid max-w-6xl gap-10 px-4 py-16 md:grid-cols-2 md:items-center md:py-24">
-          <div className="anim-fade-up">
-            <span className="inline-flex items-center gap-2 rounded-full border border-[#D6E2F7] bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#2F80ED]">
-              <Sparkles className="h-4 w-4" /> Task-based earning platform
-            </span>
-            <h1 className="mt-5 text-4xl font-black leading-tight tracking-tight text-[#0A1A3C] md:text-6xl">
-              Turn small tasks into
-              <span className="text-[#2F80ED]"> real payouts.</span>
-            </h1>
-            <p className="mt-5 max-w-xl text-base leading-relaxed text-[#475569]">
-              VIREON brings your earning modules, task activity, wallet and
-              withdrawal requests into one clean dashboard. Sign in, activate,
-              and start completing tasks at your own pace.
-            </p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <button
-                onClick={handleGetStarted}
-                disabled={signingIn || loading}
-                className="flex items-center justify-center gap-2 rounded-full bg-[#2F80ED] px-7 py-3.5 text-base font-black text-white transition hover:bg-[#1D6FE0] active:scale-95 disabled:opacity-60"
-              >
-                {signingIn ? (
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                ) : (
-                  <Globe2 className="h-5 w-5" />
-                )}
-                Continue with Google
-              </button>
-              <a
-                href="#how"
-                className="flex items-center justify-center gap-2 rounded-full border border-[#D6E2F7] bg-white px-7 py-3.5 text-base font-bold text-[#0A1A3C] transition hover:border-[#2F80ED]"
-              >
-                See how it works <ChevronDown className="h-5 w-5" />
-              </a>
-            </div>
-            {error && (
-              <p className="mt-3 text-sm font-semibold text-red-600">{error}</p>
-            )}
-            <div className="mt-8 flex flex-wrap items-center gap-6 text-sm text-[#64748B]">
-              <span className="flex items-center gap-2">
-                <BadgeCheck className="h-5 w-5 text-[#2F80ED]" /> Google secured
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(#0A1A3C14_1px,transparent_1px)] [background-size:22px_22px]" />
+        <div className="anim-float-slow pointer-events-none absolute -left-24 -top-10 h-72 w-72 rounded-full bg-[#2F80ED]/20 blur-3xl" />
+        <div className="anim-float pointer-events-none absolute -right-24 top-24 h-80 w-80 rounded-full bg-[#38BDF8]/20 blur-3xl" />
+        <div className="pointer-events-none absolute bottom-0 left-1/2 h-64 w-[36rem] -translate-x-1/2 rounded-full bg-[#2F80ED]/10 blur-3xl" />
+
+        <div className="relative mx-auto max-w-5xl px-4 py-16 md:py-24">
+          <div className="relative mx-auto max-w-3xl text-center">
+            <div className="anim-fade-up">
+              <span className="inline-flex items-center gap-2 rounded-full border border-[#D6E2F7] bg-white px-4 py-1.5 text-xs font-bold uppercase tracking-wider text-[#2F80ED] shadow-sm">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+                </span>
+                Live payouts • Task-based earning
               </span>
-              <span className="flex items-center gap-2">
-                <Lock className="h-5 w-5 text-[#2F80ED]" /> No card required
-              </span>
-              <span className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-[#2F80ED]" /> Member dashboard
-              </span>
+              <h1 className="mt-5 text-4xl font-black leading-[1.05] tracking-tight text-[#0A1A3C] md:text-6xl">
+                Turn small tasks into{' '}
+                <span className="anim-gradient bg-gradient-to-r from-[#2F80ED] via-[#38BDF8] to-[#2F80ED] bg-clip-text text-transparent">
+                  real payouts.
+                </span>
+              </h1>
+              <p className="mx-auto mt-5 max-w-xl text-base leading-relaxed text-[#475569]">
+                VIREON brings your earning modules, task activity, wallet and
+                withdrawal requests into one clean dashboard. Sign in, activate,
+                and start completing tasks at your own pace.
+              </p>
+              <div className="mt-7 flex flex-col justify-center gap-3 sm:flex-row">
+                <button
+                  onClick={handleGetStarted}
+                  disabled={signingIn || loading}
+                  className="group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-[#2F80ED] px-7 py-3.5 text-base font-black text-white shadow-lg shadow-[#2F80ED]/30 transition hover:-translate-y-0.5 hover:bg-[#1D6FE0] hover:shadow-xl hover:shadow-[#2F80ED]/40 active:scale-95 disabled:opacity-60"
+                >
+                  <span className="anim-shine pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                  {signingIn ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <Globe2 className="h-5 w-5" />
+                  )}
+                  Continue with Google
+                </button>
+                <a
+                  href="#how"
+                  className="inline-flex items-center justify-center gap-2 rounded-full border border-[#D6E2F7] bg-white px-7 py-3.5 text-base font-bold text-[#0A1A3C] transition hover:-translate-y-0.5 hover:border-[#2F80ED] hover:shadow-lg"
+                >
+                  See how it works <ChevronDown className="h-5 w-5" />
+                </a>
+              </div>
+              {error && (
+                <p className="mt-3 text-sm font-semibold text-red-600">
+                  {error}
+                </p>
+              )}
+              <div className="mt-8 flex flex-wrap items-center justify-center gap-6 text-sm text-[#64748B]">
+                <span className="flex items-center gap-2 transition hover:text-[#0A1A3C]">
+                  <BadgeCheck className="h-5 w-5 text-[#2F80ED]" /> Google
+                  secured
+                </span>
+                <span className="flex items-center gap-2 transition hover:text-[#0A1A3C]">
+                  <Lock className="h-5 w-5 text-[#2F80ED]" /> No card required
+                </span>
+                <span className="flex items-center gap-2 transition hover:text-[#0A1A3C]">
+                  <Users className="h-5 w-5 text-[#2F80ED]" /> Member dashboard
+                </span>
+              </div>
             </div>
           </div>
 
-          {/* Hero visual */}
-          <div className="anim-pop-in relative">
-            <div className="rounded-[28px] border border-[#D6E2F7] bg-white p-5 shadow-2xl shadow-[#0A1A3C]/10">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <VireonLogo size={34} />
-                  <div>
-                    <p className="text-sm font-black text-[#0A1A3C]">
-                      Welcome back, Amaka
-                    </p>
-                    <p className="text-[11px] text-[#64748B]">Starter plan</p>
-                  </div>
-                </div>
-                <span className="rounded-full bg-[#E8F1FF] px-3 py-1 text-[10px] font-bold uppercase text-[#2F80ED]">
-                  Active
-                </span>
+          <div className="pointer-events-none absolute inset-0 hidden xl:block">
+            <div className="anim-float absolute -left-10 top-20 flex items-center gap-2 rounded-2xl border border-[#E2E8F5] bg-white/90 px-4 py-3 shadow-xl shadow-[#0A1A3C]/5 backdrop-blur">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                <CheckCircle2 className="h-4 w-4" />
               </div>
-              <div className="mt-4 grid grid-cols-2 gap-3">
-                <div className="rounded-2xl bg-[#0A1A3C] p-4 text-white">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-white/60">
-                    Available balance
-                  </p>
-                  <p className="mt-1 text-2xl font-black">₦42,500</p>
-                </div>
-                <div className="rounded-2xl bg-[#E8F1FF] p-4">
-                  <p className="text-[10px] font-bold uppercase tracking-wider text-[#2F80ED]">
-                    Pending withdrawal
-                  </p>
-                  <p className="mt-1 text-2xl font-black text-[#0A1A3C]">
-                    ₦10,000
-                  </p>
-                </div>
-              </div>
-              <div className="mt-4 space-y-2">
-                {[
-                  'CallCash task completed',
-                  'Survey submitted',
-                  'Streak day 6',
-                ].map((item) => (
-                  <div
-                    key={item}
-                    className="flex items-center justify-between rounded-xl border border-[#E2E8F5] px-3 py-2 text-sm"
-                  >
-                    <span className="flex items-center gap-2 font-medium text-[#334155]">
-                      <CheckCircle2 className="h-4 w-4 text-[#2F80ED]" />
-                      {item}
-                    </span>
-                    <span className="font-bold text-[#0A1A3C]">+₦500</span>
-                  </div>
-                ))}
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">
+                  Task verified
+                </p>
+                <p className="text-sm font-black text-[#0A1A3C]">
+                  +₦500 credited
+                </p>
               </div>
             </div>
-            <div className="absolute -bottom-6 -left-6 hidden rounded-2xl border border-[#D6E2F7] bg-white p-4 shadow-xl sm:block">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#2F80ED] text-white">
-                  <Wallet className="h-5 w-5" />
-                </div>
-                <div>
-                  <p className="text-xs text-[#64748B]">Withdrawal</p>
-                  <p className="text-sm font-black text-[#0A1A3C]">
-                    Paid instantly
-                  </p>
-                </div>
+            <div className="anim-float-slow absolute -right-10 top-16 flex items-center gap-2 rounded-2xl border border-[#E2E8F5] bg-white/90 px-4 py-3 shadow-xl shadow-[#0A1A3C]/5 backdrop-blur">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#E8F1FF] text-[#2F80ED]">
+                <CreditCard className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">
+                  Activation reward
+                </p>
+                <p className="text-sm font-black text-[#0A1A3C]">
+                  Up to ₦20,000
+                </p>
+              </div>
+            </div>
+            <div className="anim-float-slow absolute bottom-16 left-0 flex items-center gap-2 rounded-2xl border border-[#E2E8F5] bg-white/90 px-4 py-3 shadow-xl shadow-[#0A1A3C]/5 backdrop-blur">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-[#E8F1FF] text-[#2F80ED]">
+                <TrendingUp className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">
+                  Withdrawals
+                </p>
+                <p className="text-sm font-black text-[#0A1A3C]">
+                  Tracked in real time
+                </p>
+              </div>
+            </div>
+            <div className="anim-float absolute bottom-20 right-0 flex items-center gap-2 rounded-2xl border border-[#E2E8F5] bg-white/90 px-4 py-3 shadow-xl shadow-[#0A1A3C]/5 backdrop-blur">
+              <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                <BadgeCheck className="h-4 w-4" />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-[#94A3B8]">
+                  Account
+                </p>
+                <p className="text-sm font-black text-[#0A1A3C]">
+                  Google secured
+                </p>
               </div>
             </div>
           </div>
@@ -360,6 +374,29 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* LIVE TICKER */}
+      <section className="overflow-hidden border-b border-[#E2E8F5] bg-[#0A1A3C] py-3">
+        <div className="mx-auto flex max-w-6xl items-center gap-6 px-4">
+          <span className="flex shrink-0 items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#38BDF8]">
+            <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" />
+            Live activity
+          </span>
+          <div className="relative flex-1 overflow-hidden">
+            <div className="anim-marquee flex w-max items-center">
+              {[...LIVE_FEED, ...LIVE_FEED].map((item, index) => (
+                <span
+                  key={`${item}-${index}`}
+                  className="mx-5 flex shrink-0 items-center gap-2 text-xs font-semibold text-white/80"
+                >
+                  <CheckCircle2 className="h-3.5 w-3.5 text-[#38BDF8]" />
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* MODULES */}
       <section id="modules" className="mx-auto max-w-6xl px-4 py-16 md:py-24">
         <div className="mx-auto max-w-2xl text-center">
@@ -378,9 +415,10 @@ const LandingPage = () => {
           {MODULES.map((module) => (
             <div
               key={module.name}
-              className="group rounded-2xl border border-[#E2E8F5] bg-white p-6 transition hover:-translate-y-1 hover:border-[#2F80ED] hover:shadow-xl hover:shadow-[#2F80ED]/10"
+              className="group relative overflow-hidden rounded-2xl border border-[#E2E8F5] bg-white p-6 transition duration-300 hover:-translate-y-1 hover:border-[#2F80ED] hover:shadow-xl hover:shadow-[#2F80ED]/10"
             >
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#E8F1FF] text-[#2F80ED] transition group-hover:bg-[#2F80ED] group-hover:text-white">
+              <span className="absolute inset-x-0 top-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-[#2F80ED] to-[#38BDF8] transition-transform duration-300 group-hover:scale-x-100" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[#E8F1FF] text-[#2F80ED] transition duration-300 group-hover:-rotate-6 group-hover:scale-110 group-hover:bg-[#2F80ED] group-hover:text-white">
                 <module.icon className="h-6 w-6" />
               </div>
               <h3 className="mt-4 text-lg font-black text-[#0A1A3C]">
@@ -405,10 +443,14 @@ const LandingPage = () => {
               From sign-up to payout in four steps
             </h2>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-4">
+          <div className="relative mt-12 grid gap-6 md:grid-cols-4">
+            <div className="absolute left-0 right-0 top-6 hidden h-px bg-gradient-to-r from-transparent via-[#2F80ED]/50 to-transparent md:block" />
             {STEPS.map((step, index) => (
-              <div key={step.title} className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#2F80ED] text-xl font-black text-white">
+              <div
+                key={step.title}
+                className="group relative transition duration-300 hover:-translate-y-1"
+              >
+                <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-2xl bg-[#2F80ED] text-xl font-black text-white shadow-lg shadow-[#2F80ED]/40 transition duration-300 group-hover:rotate-3 group-hover:scale-110">
                   {index + 1}
                 </div>
                 <h3 className="mt-4 text-lg font-black">{step.title}</h3>
@@ -438,7 +480,7 @@ const LandingPage = () => {
           {TESTIMONIALS.map((t) => (
             <div
               key={t.name}
-              className="rounded-2xl border border-[#E2E8F5] bg-white p-6 shadow-sm"
+              className="rounded-2xl border border-[#E2E8F5] bg-white p-6 shadow-sm transition duration-300 hover:-translate-y-1 hover:border-[#2F80ED]/40 hover:shadow-xl"
             >
               <div className="flex items-center gap-1 text-[#2F80ED]">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -453,7 +495,10 @@ const LandingPage = () => {
                   {t.initials}
                 </div>
                 <div>
-                  <p className="text-sm font-black text-[#0A1A3C]">{t.name}</p>
+                  <p className="flex items-center gap-1 text-sm font-black text-[#0A1A3C]">
+                    {t.name}
+                    <BadgeCheck className="h-3.5 w-3.5 text-[#2F80ED]" />
+                  </p>
                   <p className="text-xs text-[#64748B]">{t.country}</p>
                 </div>
               </div>
@@ -477,12 +522,15 @@ const LandingPage = () => {
             </h2>
           </div>
           <div className="mt-10 grid gap-6 md:grid-cols-2">
-            <div className="rounded-3xl border border-[#E2E8F5] bg-[#F4F7FE] p-8">
+            <div className="rounded-3xl border border-[#E2E8F5] bg-[#F4F7FE] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#2F80ED]/40 hover:shadow-2xl">
               <h3 className="text-lg font-black text-[#0A1A3C]">Starter</h3>
               <p className="mt-1 text-sm text-[#64748B]">
                 Activate with a ₦12,000 deposit and unlock your dashboard.
               </p>
               <p className="mt-5 text-4xl font-black text-[#0A1A3C]">₦12,000</p>
+              <p className="mt-2 text-xs font-bold text-emerald-600">
+                Claim ₦12,000 back after activation
+              </p>
               <ul className="mt-6 space-y-3 text-sm text-[#334155]">
                 {[
                   'Google account sign-in',
@@ -495,8 +543,10 @@ const LandingPage = () => {
                 ))}
               </ul>
             </div>
-            <div className="relative rounded-3xl border-2 border-[#2F80ED] bg-[#0A1A3C] p-8 text-white shadow-2xl shadow-[#2F80ED]/20">
-              <span className="absolute right-6 top-6 rounded-full bg-[#2F80ED] px-3 py-1 text-[10px] font-bold uppercase tracking-wider">
+            <div className="relative overflow-hidden rounded-3xl border-2 border-[#2F80ED] bg-[#0A1A3C] p-8 text-white shadow-2xl shadow-[#2F80ED]/20 transition duration-300 hover:-translate-y-1 hover:shadow-[#2F80ED]/40">
+              <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-[#2F80ED]/30 blur-2xl" />
+              <span className="absolute right-6 top-6 flex items-center gap-1 rounded-full bg-[#2F80ED] px-3 py-1 text-[10px] font-bold uppercase tracking-wider">
+                <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-white" />
                 Most popular
               </span>
               <h3 className="text-lg font-black">Activated</h3>
@@ -504,6 +554,9 @@ const LandingPage = () => {
                 Activate with a ₦20,000 deposit for full access.
               </p>
               <p className="mt-5 text-4xl font-black">₦20,000</p>
+              <p className="mt-2 text-xs font-bold text-[#38BDF8]">
+                Claim ₦20,000 back after activation
+              </p>
               <ul className="mt-6 space-y-3 text-sm text-white/85">
                 {[
                   'All earning modules',
@@ -551,19 +604,22 @@ const LandingPage = () => {
 
       {/* CTA */}
       <section className="px-4 pb-16">
-        <div className="mx-auto max-w-5xl overflow-hidden rounded-3xl bg-gradient-to-br from-[#2F80ED] to-[#0A1A3C] px-6 py-12 text-center text-white md:px-12 md:py-16">
-          <h2 className="text-3xl font-black tracking-tight md:text-4xl">
+        <div className="anim-gradient relative mx-auto max-w-5xl overflow-hidden rounded-3xl bg-gradient-to-br from-[#2F80ED] to-[#0A1A3C] px-6 py-12 text-center text-white md:px-12 md:py-16">
+          <div className="anim-float-slow pointer-events-none absolute -left-16 -top-16 h-48 w-48 rounded-full bg-white/10 blur-2xl" />
+          <div className="anim-float pointer-events-none absolute -bottom-20 -right-10 h-56 w-56 rounded-full bg-[#38BDF8]/20 blur-2xl" />
+          <h2 className="relative text-3xl font-black tracking-tight md:text-4xl">
             Ready to start earning with VIREON?
           </h2>
-          <p className="mx-auto mt-3 max-w-xl text-sm text-white/80">
+          <p className="relative mx-auto mt-3 max-w-xl text-sm text-white/80">
             Create your account, complete your profile and activate your
             dashboard. Everything you need is in one place.
           </p>
           <button
             onClick={handleGetStarted}
             disabled={signingIn || loading}
-            className="mt-7 inline-flex items-center gap-2 rounded-full bg-white px-8 py-3.5 text-base font-black text-[#0A1A3C] transition hover:bg-[#E8F1FF] active:scale-95 disabled:opacity-60"
+            className="group relative mt-7 inline-flex items-center justify-center gap-2 overflow-hidden rounded-full bg-white px-8 py-3.5 text-base font-black text-[#0A1A3C] shadow-lg shadow-[#0A1A3C]/20 transition hover:-translate-y-0.5 hover:bg-[#E8F1FF] hover:shadow-xl active:scale-95 disabled:opacity-60"
           >
+            <span className="anim-shine pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-[#2F80ED]/20 to-transparent" />
             {signingIn ? (
               <Loader2 className="h-5 w-5 animate-spin" />
             ) : (
@@ -571,6 +627,9 @@ const LandingPage = () => {
             )}
             Get started
           </button>
+          <p className="relative mt-4 text-[11px] font-semibold uppercase tracking-wider text-white/60">
+            Google secured • No card required
+          </p>
         </div>
       </section>
 
