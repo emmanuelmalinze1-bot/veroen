@@ -267,7 +267,7 @@ const LandingPage = () => {
                   ) : (
                     <Globe2 className="h-5 w-5" />
                   )}
-                  Continue with Google
+                  Get started earning
                 </button>
                 <a
                   href="#how"
