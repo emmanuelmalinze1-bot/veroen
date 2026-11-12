@@ -6,7 +6,6 @@ import { User, Home, ListChecks, Wallet, Bell } from 'lucide-react'
 import { Link, navigate, routes, useLocation } from '@redwoodjs/router'
 
 import ActivationRewardPopup from 'src/components/ActivationRewardPopup/ActivationRewardPopup'
-import VireonLogo from 'src/components/VireonLogo/VireonLogo'
 import { useAuth } from 'src/contexts/AuthContexts'
 import { db } from 'src/lib/firebase'
 
@@ -62,8 +61,7 @@ const MainLayout = ({ children }) => {
     <div className="mx-auto min-h-screen max-w-md bg-[#F4F7FE] font-sans text-[#0F172A] antialiased">
       <header className="sticky top-0 z-40 bg-[#0A1A3C] text-white">
         <div className="flex items-center justify-between px-4 py-3">
-          <Link to={routes.home()} className="flex items-center gap-1.5">
-            <VireonLogo size={38} />
+          <Link to={routes.home()} className="flex items-center">
             <span className="text-2xl font-black tracking-tight">
               {headerTitle ? (
                 <span className="text-white">{headerTitle}</span>

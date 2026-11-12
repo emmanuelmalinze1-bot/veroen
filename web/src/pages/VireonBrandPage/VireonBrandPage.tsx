@@ -3,8 +3,6 @@ import { ChevronLeft } from 'lucide-react'
 import { navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 
-import VireonLogo from 'src/components/VireonLogo/VireonLogo'
-
 const VireonBrandPage = () => {
   return (
     <div className="mx-auto min-h-screen max-w-md bg-[#0A1A3C] font-sans">
@@ -21,7 +19,10 @@ const VireonBrandPage = () => {
       </div>
 
       <div className="flex flex-col items-center justify-center p-10 text-center">
-        <VireonLogo size={280} />
+        <p className="text-6xl font-black tracking-tight">
+          <span className="text-[#38BDF8]">VI</span>
+          <span className="text-white">REON</span>
+        </p>
 
         <h2 className="mt-6 text-3xl font-black text-white">Our Brand</h2>
         <p className="mt-2 max-w-xs text-sm text-white/70">

@@ -22,7 +22,6 @@ import {
 import { navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 
-import VireonLogo from 'src/components/VireonLogo/VireonLogo'
 import { useAuth } from 'src/contexts/AuthContexts'
 import { db } from 'src/lib/firebase'
 
@@ -88,7 +87,7 @@ const LIVE_FEED = [
   'Amaka withdrew ₦15,000 • 2 min ago',
   'New member joined from Lagos',
   'Daniel completed a CallCash task • ₦500',
-  'Fatima activated the ₦20,000 plan',
+  'Fatima activated the ₦15,000 plan',
   'Tunde received a payout • 5 min ago',
   'Survey module refreshed with new tasks',
 ]
@@ -188,8 +187,7 @@ const LandingPage = () => {
       {/* NAV */}
       <header className="sticky top-0 z-40 border-b border-[#E2E8F5] bg-white/85 shadow-sm shadow-[#0A1A3C]/5 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-          <div className="flex items-center gap-2">
-            <VireonLogo size={38} />
+          <div className="flex items-center">
             <span className="text-xl font-black tracking-tight">
               <span className="text-[#2F80ED]">VI</span>
               <span className="text-[#0A1A3C]">REON</span>
@@ -319,7 +317,7 @@ const LandingPage = () => {
                   Activation reward
                 </p>
                 <p className="text-sm font-black text-[#0A1A3C]">
-                  Up to ₦20,000
+                  Up to ₦15,000
                 </p>
               </div>
             </div>
@@ -525,11 +523,11 @@ const LandingPage = () => {
             <div className="rounded-3xl border border-[#E2E8F5] bg-[#F4F7FE] p-8 transition duration-300 hover:-translate-y-1 hover:border-[#2F80ED]/40 hover:shadow-2xl">
               <h3 className="text-lg font-black text-[#0A1A3C]">Starter</h3>
               <p className="mt-1 text-sm text-[#64748B]">
-                Activate with a ₦12,000 deposit and unlock your dashboard.
+                Activate with a ₦10,000 deposit and unlock your dashboard.
               </p>
-              <p className="mt-5 text-4xl font-black text-[#0A1A3C]">₦12,000</p>
+              <p className="mt-5 text-4xl font-black text-[#0A1A3C]">₦10,000</p>
               <p className="mt-2 text-xs font-bold text-emerald-600">
-                Claim ₦12,000 back after activation
+                Claim ₦10,000 back after activation
               </p>
               <ul className="mt-6 space-y-3 text-sm text-[#334155]">
                 {[
@@ -551,11 +549,11 @@ const LandingPage = () => {
               </span>
               <h3 className="text-lg font-black">Activated</h3>
               <p className="mt-1 text-sm text-white/60">
-                Activate with a ₦20,000 deposit for full access.
+                Activate with a ₦15,000 deposit for full access.
               </p>
-              <p className="mt-5 text-4xl font-black">₦20,000</p>
+              <p className="mt-5 text-4xl font-black">₦15,000</p>
               <p className="mt-2 text-xs font-bold text-[#38BDF8]">
-                Claim ₦20,000 back after activation
+                Claim ₦15,000 back after activation
               </p>
               <ul className="mt-6 space-y-3 text-sm text-white/85">
                 {[
@@ -637,7 +635,6 @@ const LandingPage = () => {
       <footer className="border-t border-[#E2E8F5] bg-white">
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm text-[#64748B] sm:flex-row">
           <div className="flex items-center gap-2">
-            <VireonLogo size={30} />
             <span className="font-black text-[#0A1A3C]">VIREON</span>
             <span>
               ©{' '}

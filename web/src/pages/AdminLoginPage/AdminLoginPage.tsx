@@ -5,8 +5,6 @@ import { Loader2, Lock, Mail, ShieldAlert } from 'lucide-react'
 import { navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 
-import VireonLogo from 'src/components/VireonLogo/VireonLogo'
-
 const ADMIN_EMAIL = 'maziemeka6@gmail.com'
 
 const AdminLoginPage = () => {
@@ -33,7 +31,10 @@ const AdminLoginPage = () => {
 
       <div className="w-full max-w-md rounded-2xl border border-[#E2E8F5] bg-white p-8 shadow-2xl shadow-[#0A1A3C]/10">
         <div className="mb-6 flex flex-col items-center text-center">
-          <VireonLogo size={56} />
+          <p className="text-3xl font-black tracking-tight">
+            <span className="text-[#2F80ED]">VI</span>
+            <span className="text-[#0A1A3C]">REON</span>
+          </p>
           <h1 className="mt-4 text-2xl font-black text-[#0A1A3C]">
             Admin access
           </h1>

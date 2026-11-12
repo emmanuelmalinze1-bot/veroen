@@ -14,7 +14,6 @@ import {
 import { navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 
-import VireonLogo from 'src/components/VireonLogo/VireonLogo'
 import { useAuth } from 'src/contexts/AuthContexts'
 import { ACTIVATION_PLANS } from 'src/lib/activation'
 import { db } from 'src/lib/firebase'
@@ -92,7 +91,10 @@ const RegisterPage = () => {
       <Metadata title="Complete your VIREON profile" />
       <div className="w-full max-w-md">
         <div className="mb-6 flex flex-col items-center text-center">
-          <VireonLogo size={56} />
+          <p className="text-3xl font-black tracking-tight">
+            <span className="text-[#2F80ED]">VI</span>
+            <span className="text-[#0A1A3C]">REON</span>
+          </p>
           <h1 className="mt-4 text-2xl font-black text-[#0A1A3C]">
             Complete your profile
           </h1>

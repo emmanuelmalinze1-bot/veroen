@@ -3,13 +3,14 @@ import { Compass } from 'lucide-react'
 import { Link, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 
-import VireonLogo from 'src/components/VireonLogo/VireonLogo'
-
 const NotFoundPage = () => {
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-[#0A1A3C] px-6 text-center font-sans">
       <Metadata title="Page not found — VIREON" />
-      <VireonLogo size={72} />
+      <p className="text-4xl font-black tracking-tight">
+        <span className="text-[#38BDF8]">VI</span>
+        <span className="text-white">REON</span>
+      </p>
       <p className="mt-6 text-5xl font-black text-[#38BDF8]">404</p>
       <h1 className="mt-2 text-2xl font-black text-white">
         This page does not exist
