@@ -24,6 +24,7 @@ import { navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 
 import { db } from 'src/lib/firebase'
+import { formatAmountInput, parseAmountInput } from 'src/lib/format'
 
 const CATEGORIES = [
   'CallCash',
@@ -67,7 +68,7 @@ const AdminTasksPage = () => {
     setForm({
       moduleName: task.moduleName || '',
       description: task.description || '',
-      pay: String(task.pay || ''),
+      pay: formatAmountInput(String(task.pay || '')),
       category: task.category || 'CallCash',
       active: task.active !== false,
     })
@@ -93,7 +94,7 @@ const AdminTasksPage = () => {
       const payload = {
         moduleName: form.moduleName,
         description: form.description,
-        pay: Number(form.pay),
+        pay: parseAmountInput(form.pay),
         category: form.category,
         active: form.active,
       }
@@ -223,10 +224,13 @@ const AdminTasksPage = () => {
                 className="w-full rounded-lg border border-white/20 bg-white px-4 py-2 text-sm text-[#0A1A3C]"
               />
               <input
-                type="number"
-                placeholder="Pay (₦)"
+                type="text"
+                inputMode="numeric"
+                placeholder="Pay (₦) e.g. 10,000"
                 value={form.pay}
-                onChange={(e) => setForm({ ...form, pay: e.target.value })}
+                onChange={(e) =>
+                  setForm({ ...form, pay: formatAmountInput(e.target.value) })
+                }
                 required
                 className="w-full rounded-lg border border-white/20 bg-white px-4 py-2 text-sm text-[#0A1A3C]"
               />

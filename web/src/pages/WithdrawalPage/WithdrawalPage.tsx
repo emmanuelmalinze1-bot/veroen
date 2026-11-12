@@ -30,6 +30,7 @@ import { Metadata } from '@redwoodjs/web'
 
 import { useAuth } from 'src/contexts/AuthContexts'
 import { db } from 'src/lib/firebase'
+import { formatAmountInput, parseAmountInput } from 'src/lib/format'
 
 const money = (value: number) => `₦${(value || 0).toLocaleString('en-NG')}`
 
@@ -234,8 +235,7 @@ const WithdrawalPage = () => {
       (snap) => {
         const data = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as any[]
         data.sort(
-          (a, b) =>
-            (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+          (a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
         )
         setSubmissions(data)
       }
@@ -250,8 +250,7 @@ const WithdrawalPage = () => {
       (snap) => {
         const data = snap.docs.map((d) => ({ id: d.id, ...d.data() })) as any[]
         data.sort(
-          (a, b) =>
-            (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+          (a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
         )
         setWithdrawals(data)
       }
@@ -277,7 +276,7 @@ const WithdrawalPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!user) return
-    const parsed = Number(amount)
+    const parsed = parseAmountInput(amount)
     if (!parsed || parsed <= 0) {
       setError('Enter a valid amount.')
       return
@@ -446,19 +445,18 @@ const WithdrawalPage = () => {
               <div className="relative">
                 <Wallet className="absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-[#94A3B8]" />
                 <input
-                  type="number"
-                  min="1"
+                  type="text"
+                  inputMode="numeric"
                   value={amount}
-                  onChange={(e) => setAmount(e.target.value)}
+                  onChange={(e) => setAmount(formatAmountInput(e.target.value))}
                   required
-                  placeholder="Amount in naira"
+                  placeholder="e.g. 10,000"
                   className="w-full rounded-lg border border-[#E2E8F5] bg-[#F4F7FE] py-2.5 pl-9 pr-3 text-[13px] font-medium outline-none focus:border-[#2F80ED]"
                 />
               </div>
               {profile && (
                 <p className="mt-1 text-[11px] text-[#94A3B8]">
-                  Available balance:{' '}
-                  {money(availableBalance)}
+                  Available balance: {money(availableBalance)}
                 </p>
               )}
             </div>
@@ -552,7 +550,8 @@ const WithdrawalPage = () => {
           <div className="rounded-xl border border-[#E2E8F5] bg-white p-3">
             <div className="mb-2 flex items-center justify-between">
               <h2 className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#64748B]">
-                <CheckCircle2 className="h-3.5 w-3.5 text-[#2F80ED]" /> Task history
+                <CheckCircle2 className="h-3.5 w-3.5 text-[#2F80ED]" /> Task
+                history
               </h2>
               <span className="text-[10px] font-bold text-[#94A3B8]">
                 {submissions.length}
@@ -589,7 +588,8 @@ const WithdrawalPage = () => {
           <div className="rounded-xl border border-[#E2E8F5] bg-white p-3">
             <div className="mb-2 flex items-center justify-between">
               <h2 className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-[#64748B]">
-                <Wallet className="h-3.5 w-3.5 text-[#2F80ED]" /> Withdrawal history
+                <Wallet className="h-3.5 w-3.5 text-[#2F80ED]" /> Withdrawal
+                history
               </h2>
               <span className="text-[10px] font-bold text-[#94A3B8]">
                 {withdrawals.length}
