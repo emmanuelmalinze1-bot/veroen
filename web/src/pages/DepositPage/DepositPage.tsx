@@ -274,12 +274,6 @@ const DepositPage = () => {
         )}
         {saving ? 'Saving...' : 'I have paid'}
       </button>
-
-      <p className="mt-2 text-center text-[10px] leading-relaxed text-[#94A3B8]">
-        After tapping “I have paid” you will be redirected to our Telegram
-        support <span className="font-bold text-[#0A1A3C]">@thevalue4k</span> to
-        confirm your payment.
-      </p>
     </div>
   )
 }
